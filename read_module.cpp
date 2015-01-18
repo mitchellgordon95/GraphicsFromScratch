@@ -18,17 +18,24 @@ bool CLI_Read::execute(std::vector<char *> &params)
 
     std::ifstream file(params[0]);
     
-    char next_line[1024];
-
-    while (!file.eof())
+    if ( !file.is_open() )
     {
-        file.getline(next_line, 1024);
-        
-        // TODO - Trim whitespace for less strict commenting rules
-        if ( next_line[0] == '#' )
-            continue;
+        std::cout << "Error: could not read " << params[0] << std::endl;
+    }
+    else
+    {
+        char next_line[1024];
 
-        dispatcher.interpret( next_line );
+        while (!file.eof())
+        {
+            file.getline(next_line, 1024);
+            
+            // TODO - Trim whitespace for less strict commenting rules
+            if ( next_line[0] == '#' )
+                continue;
+
+            dispatcher.interpret( next_line );
+        }
     }
 
     --depth_count;
