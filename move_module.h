@@ -6,12 +6,12 @@
 // Implements the move command for the cli
 class CLI_Move : public CLI_Module 
 {
-public:
-    CLI_Move();
-    ~CLI_Move();
-
+private:
     // Moves the pen to a specified location in 3 dimensions
-    bool execute(std::vector<char *> &command);
+    bool execute(std::vector<char *> &params);
+public:
+    CLI_Move(): CLI_Module("move", 3) {};
+    ~CLI_Move();
 };
 
 #endif

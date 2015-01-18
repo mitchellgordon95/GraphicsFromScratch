@@ -22,7 +22,7 @@ LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
 all: main
 
-CLI_OBJECTS=main.o dispatcher_module.o move_module.o draw_module.o color_module.o 
+CLI_OBJECTS=main.o cli_module.o dispatcher_module.o move_module.o draw_module.o color_module.o read_module.o
 
 main: $(CLI_OBJECTS)
 	$(LINK) $(CLI_OBJECTS) $(LDADD) $(LIBS)

@@ -219,7 +219,7 @@ main_loop(char line[])
          command[0][i] = tolower(command[0][i]);
 
       // Pass the command to the dispatcher.
-      if ( !dispatcher.execute(command) )
+      if ( !dispatcher.interpret(command) )
          printf("Command not found.\n");
    }
 

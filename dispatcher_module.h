@@ -8,10 +8,11 @@ class Dispatcher : public CLI_Module
 {
 private:
     std::vector<CLI_Module *> _modules;
+
 public:
-    Dispatcher();
+    Dispatcher(); 
     ~Dispatcher();
-    bool execute(std::vector<char *> &command);
+    bool interpret(std::vector<char *> &command);
 };
 
 #endif
