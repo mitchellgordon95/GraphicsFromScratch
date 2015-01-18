@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstddef>
 #include <exception>
+#include <stdexcept>
 
 CLI_Read::~CLI_Read()
 {
@@ -10,17 +11,26 @@ CLI_Read::~CLI_Read()
 
 bool CLI_Read::execute(std::vector<char *> &params)
 {
-    ++call_depth;
-    
-    if (call_depth > 32)
-        throw std::exception("Maximum recursive read depth reached.");
+    ++depth_count;
 
-    // Open the file
-    
-    // Dispatch each line
+    if (depth_count > 32)
+        throw std::runtime_error("Maximum recursive read depth reached.");
 
+    std::ifstream file(params[0]);
     
+    char next_line[1024];
 
-    --call_depth;
+    while (!file.eof())
+    {
+        file.getline(next_line, 1024);
+        
+        // TODO - Trim whitespace for less strict commenting rules
+        if ( next_line[0] == '#' )
+            continue;
+
+        dispatcher.interpret( next_line );
+    }
+
+    --depth_count;
     return true;
 }

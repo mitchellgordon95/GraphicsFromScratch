@@ -204,22 +204,8 @@ main_loop(char line[])
    }
    else
    {
-      // Parse the tokens into a vector
-      std::vector<char *> command;
-      
-      char * next = strtok(line, ", ");
-      while ( next != NULL)
-      {
-         command.push_back(next);
-         next = strtok(NULL, ", ");
-      } 
-     
-      // Convert the first token to lower case
-      for (unsigned int i = 0; i < strlen(command[0]); ++i)
-         command[0][i] = tolower(command[0][i]);
-
       // Pass the command to the dispatcher.
-      if ( !dispatcher.interpret(command) )
+      if ( !dispatcher.interpret(line) )
          printf("Command not found.\n");
    }
 

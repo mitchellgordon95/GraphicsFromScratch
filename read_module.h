@@ -3,6 +3,9 @@
 
 #include "cli_module.h"
 #include "dispatcher_module.h"
+#include <vector>
+#include <iostream>
+#include <fstream>
 
 // Implements the read command for the cli
 class CLI_Read : public CLI_Module 
@@ -10,13 +13,13 @@ class CLI_Read : public CLI_Module
 private:
     Dispatcher &dispatcher;
     
-    // Number of times execute has been called recursively
-    int call_depth;
+    // The number of times execute has been called recursively
+    int depth_count;
 
     // Reads a CLI script and executes it 
     bool execute(std::vector<char *> &params);
 public:
-    CLI_Read(Dispatcher &d): CLI_Module("read", 3), dispatcher(d), call_depth(0) {};
+    CLI_Read(Dispatcher &d): CLI_Module("read", 1), dispatcher(d), depth_count(0){};
     ~CLI_Read();
 };
 

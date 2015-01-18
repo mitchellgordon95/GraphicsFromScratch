@@ -8,8 +8,8 @@ class CLI_Module
 {
 private:
     // Derived classes should override this to perform
-    // some meaningful tasks. Returns false by default
-    virtual bool execute(std::vector<char *> &params) { return false; }
+    // some meaningful tasks. 
+    virtual bool execute(std::vector<char *> &params) = 0; 
 
     // The keyword that a derived module is associated with
     const char * keyword;

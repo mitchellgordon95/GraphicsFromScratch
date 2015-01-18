@@ -5,7 +5,7 @@
 
 bool CLI_Module::interpret(std::vector<char *> &command)
 {
-    if (strncmp(command[0], keyword, strlen(keyword)) != 0)
+    if (command.size() == 0 || strncmp(command[0], keyword, strlen(keyword)) != 0)
         return false;
 
     if (command.size() - 1 != param_count)
