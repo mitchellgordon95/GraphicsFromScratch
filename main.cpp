@@ -19,6 +19,9 @@
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include "dispatcher_module.h"
 
 /*	Create checkerboard image	*/
 #define	checkImageWidth 1024
@@ -26,6 +29,9 @@
 GLubyte checkImage[checkImageHeight][checkImageWidth][3];
 
 static GLint height;
+
+// The dispatcher for our CLI
+static Dispatcher dispatcher;
 
 void 
 makeCheckImage(void)
@@ -191,16 +197,32 @@ mouse(int button, int press, int x, int y)
 void
 main_loop(char line[])
 {
-   /* PUT YOUR CLI CODE HERE! */
-  
    if (line == NULL)
    {
       printf("Exiting...\n");
       exit(0);
    }
    else
-      printf("RESULT: %s\n",line);
+   {
+      // Parse the tokens into a vector
+      std::vector<char *> command;
+      
+      char * next = strtok(line, ", ");
+      while ( next != NULL)
+      {
+         command.push_back(next);
+         next = strtok(NULL, ", ");
+      } 
      
+      // Convert the first token to lower case
+      for (unsigned int i = 0; i < strlen(command[0]); ++i)
+         command[0][i] = tolower(command[0][i]);
+
+      // Pass the command to the dispatcher.
+      if ( !dispatcher.execute(command) )
+         printf("Command not found.\n");
+   }
+
    printf("CLI> ");
    fflush(stdout);
 

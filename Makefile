@@ -1,5 +1,6 @@
 SHELL = /bin/sh
-prefix = /usr/lib/i386-linux-gnu
+#prefix = /usr/lib/i386-linux-gnu
+prefix = /usr/lib/x86_64-linux-gnu
 CC = gcc
 C++ = g++
 GLUT_LIBS = $(prefix)/libglut.so.3
@@ -21,7 +22,7 @@ LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
 all: main
 
-CLI_OBJECTS=main.o 
+CLI_OBJECTS=main.o dispatcher_module.o move_module.o draw_module.o color_module.o 
 
 main: $(CLI_OBJECTS)
 	$(LINK) $(CLI_OBJECTS) $(LDADD) $(LIBS)
