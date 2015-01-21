@@ -22,16 +22,70 @@ Dispatcher::~Dispatcher()
         delete _modules[i];
 }
 
-bool Dispatcher::interpret(char * command) {
+bool Dispatcher::interpret(char * command) 
+{
     // Parse the tokens into a vector
     std::vector<char *> tokens;
       
-    char * next = strtok(command, ", ");
+    char * begin = command;
+    char * end = command;
+    
+    // We parse tokens manually because we have wierd requirements with commas.
+    while ( true )
+    {
+        // Go to the end of the token 
+        while ( *end != ' ' && *end != '\t' && *end != ',' && *end != '\0' )
+            ++end;
+
+        // We hit the end of the string. Bail out.
+        if ( *end == '\0' )
+        {
+            // There's one more token left to push
+            if ( begin != end )
+                tokens.push_back(begin);
+
+            break;
+        }
+
+        // Use the delimeter space to mark the end of our token.
+        *end = '\0';
+
+        // Push the token
+        tokens.push_back(begin);
+
+        // Find the beginning of the next token.
+        ++end;
+        bool found_first_comma = false;
+
+        while ( (*end == ' ' || *end == '\t' || *end == ',') && *end != '\0' )
+        {
+            // Multiple commas in the delimeter means empty tokens.
+            if ( *end == ',' )
+            {
+                if (found_first_comma)
+                    tokens.push_back("\0");
+                
+                found_first_comma = true;
+            }
+ 
+            ++end;
+        }
+
+        // We hit the end of the string. Bail out.
+        if ( *end == '\0' )
+            break;
+
+        // We found the beginning of the next token.
+        begin = end;
+    } 
+        
+    /*char * next = strtok(command, " \t");
     while ( next != NULL)
     {
         tokens.push_back(next);
-        next = strtok(NULL, ", ");
+        next = strtok(NULL, " \t");
     } 
+    */
      
     // Convert the first token to lower case
     if(tokens.size() > 0)
