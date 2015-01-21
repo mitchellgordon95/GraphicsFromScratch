@@ -17,7 +17,7 @@ private:
     int depth_count;
 
     // Reads a CLI script and executes it 
-    bool execute(std::vector<char *> &params);
+    void execute(std::vector<char *> &params);
 public:
     CLI_Read(Dispatcher &d): CLI_Module("read", 1), dispatcher(d), depth_count(0){};
     ~CLI_Read();

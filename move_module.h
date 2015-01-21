@@ -8,7 +8,7 @@ class CLI_Move : public CLI_Module
 {
 private:
     // Moves the pen to a specified location in 3 dimensions
-    virtual bool execute(std::vector<char *> &params);
+    virtual void execute(std::vector<char *> &params);
 public:
     CLI_Move(): CLI_Module("move", 3) {};
     ~CLI_Move();

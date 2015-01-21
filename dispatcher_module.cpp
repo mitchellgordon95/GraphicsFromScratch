@@ -79,14 +79,6 @@ bool Dispatcher::interpret(char * command)
         begin = end;
     } 
         
-    /*char * next = strtok(command, " \t");
-    while ( next != NULL)
-    {
-        tokens.push_back(next);
-        next = strtok(NULL, " \t");
-    } 
-    */
-     
     // Convert the first token to lower case
     if(tokens.size() > 0)
         for (unsigned int i = 0; i < strlen(tokens[0]); ++i)

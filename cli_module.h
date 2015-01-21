@@ -9,7 +9,7 @@ class CLI_Module
 private:
     // Derived classes should override this to perform
     // some meaningful tasks. 
-    virtual bool execute(std::vector<char *> &params) = 0; 
+    virtual void execute(std::vector<char *> &params) = 0; 
 
     // The keyword that a derived module is associated with
     const char * keyword;
@@ -23,8 +23,8 @@ public:
     // Virtual destructor
     virtual ~CLI_Module() {};
 
-    // Interprets a command. Returns true on success,
-    // false if the command is not recognized. 
+    // Interprets a command. Returns true if the command
+    // was recognized, false if the command is not recognized. 
     // NOTE: expects all commands to be lower case
     bool interpret(std::vector<char *> &command);
 };

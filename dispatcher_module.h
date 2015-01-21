@@ -9,7 +9,7 @@ class Dispatcher : public CLI_Module
 private:
     std::vector< CLI_Module * > _modules;
     
-    bool execute (std::vector<char *> &params) { return false; }
+    void execute (std::vector<char *> &params) {}
 
 public:
     Dispatcher(); 

@@ -13,10 +13,20 @@ bool CLI_Module::interpret(std::vector<char *> &command)
     if (command.size() - 1 != param_count)
     {
         std::cout << "Invalid argument count. Expected " << param_count << " params." << std::endl;
-        return true;
+    }
+    else
+    {
+        command.erase(command.begin());
+
+        try
+        {
+            execute(command);
+        }
+        catch (std::exception &e)
+        {
+            std::cout << "Exception: " << e.what() << std::endl;
+        }
     }
 
-    command.erase(command.begin());
-
-    return execute(command);
+    return true;
 }

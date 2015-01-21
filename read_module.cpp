@@ -9,7 +9,7 @@ CLI_Read::~CLI_Read()
 {
 }
 
-bool CLI_Read::execute(std::vector<char *> &params)
+void CLI_Read::execute(std::vector<char *> &params)
 {
     ++depth_count;
 
@@ -20,10 +20,12 @@ bool CLI_Read::execute(std::vector<char *> &params)
     
     if ( !file.is_open() )
     {
-        std::cout << "Error: could not read " << params[0] << std::endl;
+        throw std::invalid_argument("Could not read file.");
     }
     else
     {
+        std::cout << "Reading script " << params[0] << std::endl;
+
         char next_line[1024];
 
         while (!file.eof())
@@ -39,5 +41,4 @@ bool CLI_Read::execute(std::vector<char *> &params)
     }
 
     --depth_count;
-    return true;
 }
