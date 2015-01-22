@@ -2,6 +2,7 @@
 #define CLI_MODULE_H
 
 #include <vector>
+#include <cstddef>
 
 // The abstract interface class for all CLI modules
 class CLI_Module 
@@ -15,7 +16,7 @@ private:
     const char * keyword;
     
     // The number of parameters this module expects
-    int param_count;
+    size_t param_count;
 public:
     // Constructor. Takes a keyword to associate the module with
     CLI_Module(const char * k, int p): keyword(k), param_count(p) {};

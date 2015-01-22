@@ -20,7 +20,7 @@ void CLI_Read::execute(std::vector<char *> &params)
     
     if ( !file.is_open() )
     {
-        throw std::invalid_argument("Could not read file.");
+        throw std::invalid_argument(std::string("Could not read file ") + params[0]);
     }
     else
     {

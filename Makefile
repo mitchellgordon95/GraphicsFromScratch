@@ -1,12 +1,13 @@
 SHELL = /bin/sh
-#prefix = /usr/lib/i386-linux-gnu
-prefix = /usr/lib/x86_64-linux-gnu
+prefix = /usr/lib/i386-linux-gnu
+# This prefix works on Kali
+#prefix = /usr/lib/x86_64-linux-gnu
 CC = gcc
 C++ = g++
 GLUT_LIBS = $(prefix)/libglut.so.3
 X_LIBADD =  -lXmu -lXext -lXi -lX11
 INCLUDES = -Iinclude -I/usr/include  
-LDADD = $(GLUT_LIBS) $(prefix)/libGLU.so.1 $(prefix)/libGL.so.1  -lm
+LDADD = $(GLUT_LIBS) $(prefix)/libGLU.so.1 $(prefix)/libGL.so.1  -lm -lstdc++
 CFLAGS = -g -O2 -Wall -fomit-frame-pointer -ffast-math -fexpensive-optimizations -D_REENTRANT
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
