@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 prefix = /usr/lib/i386-linux-gnu
 # This prefix works on Kali
-#prefix = /usr/lib/x86_64-linux-gnu
+prefix = /usr/lib/x86_64-linux-gnu
 CC = gcc
 C++ = g++
 GLUT_LIBS = $(prefix)/libglut.so.3

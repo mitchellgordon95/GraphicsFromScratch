@@ -27,8 +27,14 @@ bool Dispatcher::interpret(char * command)
     // Parse the tokens into a vector
     std::vector<char *> tokens;
       
+    // The beginning of the current token
     char * begin = command;
+    // The end of the current token.
     char * end = command;
+    
+    // A pointer to the null char at the end of the string.
+    // We'll push this when there are empty tokens
+    char * end_of_command = begin + strlen(begin);
     
     // We parse tokens manually because we have wierd requirements with commas.
     while ( true )
@@ -63,7 +69,7 @@ bool Dispatcher::interpret(char * command)
             if ( *end == ',' )
             {
                 if (found_first_comma)
-                    tokens.push_back("\0");
+                    tokens.push_back(end_of_command);
                 
                 found_first_comma = true;
             }

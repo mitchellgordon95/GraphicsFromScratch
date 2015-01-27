@@ -38,6 +38,8 @@ void CLI_Read::execute(std::vector<char *> &params)
 
             dispatcher.interpret( next_line );
         }
+        
+        std::cout << "End script " << params[0] << std::endl;
     }
 
     --depth_count;
