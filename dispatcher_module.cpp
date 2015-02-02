@@ -3,6 +3,9 @@
 #include "draw_module.h"
 #include "color_module.h"
 #include "read_module.h"
+#include "tiffstat_module.h"
+#include "tiffread_module.h"
+#include "tiffwrite_module.h"
 #include <cstddef>
 #include <string.h>
 
@@ -14,6 +17,9 @@ Dispatcher::Dispatcher() : CLI_Module("", 0)
     _modules.push_back(new CLI_Draw());    
     _modules.push_back(new CLI_Color());    
     _modules.push_back(new CLI_Read(*this));
+    _modules.push_back(new CLI_TiffStat());
+    _modules.push_back(new CLI_TiffRead());
+    _modules.push_back(new CLI_TiffWrite());
 }
 
 Dispatcher::~Dispatcher()
