@@ -44,48 +44,49 @@ IFD_Entry IFD_Entry::readFromFile(std::ifstream &file, EndianStreamReader reader
     int valuePointer;
     reader.readInt(file, (char * ) &valuePointer, 1);
 
-    int byteSize = out.count * sizeOfType(out.type);
+    // Store the current file pos
+    int filePos = file.tellg();
+
+    int typeSize = sizeOfType(out.type);
+    int byteSize = out.count * typeSize;
+
     // If the actual value can fit in 4 bytes
     if ( byteSize < 5) {
-        // Then the pointer is the data.
-        out.value = new char[byteSize];
-        
-        if ( sizeOfType( out.type ) == 2 )
-           *((uint16_t *)out.value) = (uint16_t) valuePointer;
-        if ( sizeOfType( out.type ) == 4 )
-           *((uint32_t *)out.value) = (uint32_t) valuePointer;
+    	// Then the pointer is the data. Seek back to the value
+        file.seekg(-4, std::ios::cur);
     }
     // Otherwise we have to follow the pointer to get the actual value
     // from the file.
     else {
-        // Store the current file pos
-        int filePos = file.tellg();
-
-        // Go to the location of the value
         file.seekg(valuePointer, std::ios::beg);
-
-        // Allocate enough dynamic memory for the value 
-        out.value = new char[byteSize];
-        
-        // Read the values into memory
-        switch ( sizeOfType(out.type) ) {
-            case 1:
-                file.read (out.value, byteSize);
-                break;
-            case 2:
-                reader.readShort(file, out.value, byteSize / 2);
-                break;
-            case 4:
-                reader.readInt(file, out.value, byteSize / 4);
-                break; 
-            case 8:
-                reader.readLong(file, out.value, byteSize / 8);
-                break;
-        }
-        
-        // Seek back to where we were before.
-        file.seekg(filePos, std::ios::beg);
     }
+	// Allocate enough dynamic memory for the value
+	out.value = new char[byteSize];
+
+	// Read the values into memory
+
+	// Rationals have to be treated specially because they consist of two Long's
+	if (out.type == RATIONAL || out.type == SRATIONAL) {
+		typeSize = 4;
+	}
+
+	switch ( typeSize ) {
+		case 1:
+			file.read (out.value, byteSize);
+			break;
+		case 2:
+			reader.readShort(file, out.value, byteSize / 2);
+			break;
+		case 4:
+			reader.readInt(file, out.value, byteSize / 4);
+			break;
+		case 8:
+			reader.readLong(file, out.value, byteSize / 8);
+			break;
+	}
+
+	// Seek back to where we were before.
+	file.seekg(filePos, std::ios::beg);
 
     return out;
 } 
@@ -104,8 +105,83 @@ IFD_Entry::~IFD_Entry() {
     delete [] value;
 }
 
+// Parse an IFD Rational into a double
+double IFD_Entry::parseRational(uint64_t rational, bool sign) {
+	double numerator, denominator;
+	// TODO - Fix Rational bug, buried somewhere in here.
+	//std::cout << "Rational: " << rational << std::endl;
+
+	if (!sign) {
+		//std::cout << "Numerator: " << (rational >> 32) << std::endl;
+		//std::cout << "Denominator: " << (rational & 0xffff) << std::endl;
+		numerator = static_cast<double>(rational >> 32);
+		denominator = static_cast<double>(rational & 0xffff);
+	}
+	else {
+		numerator = (double) ((int16_t) (rational >> 32));
+		denominator = (double) ((int16_t)(rational & 0xffff));
+	}
+
+
+	return numerator / denominator;
+}
+
+// Print the values of this IFD_Entry
+void IFD_Entry::printValues(size_t max_to_print) {
+	for (size_t i = 0; i < count && i < max_to_print; ++i) {
+		switch (type) {
+			case BYTE:
+				printf("%hhu", *(value + i));
+				break;
+			case ASCII:
+				std::cout << *(value + i);
+				break;
+			case SBYTE:
+				printf("%hhd", *(value + i));
+				break;
+			case UNDEFINED:
+				printf("%hhx", *(value + i));
+				break;
+			case SHORT:
+				printf("%hu", *((uint16_t *)value + i));
+				break;
+			case SSHORT:
+				printf("%hd", *((int16_t *)value + i));
+				break;
+			case LONG:
+				printf("%u", *((uint32_t *)value + i));
+				break;
+			case SLONG:
+				printf("%d", *((int32_t *)value + i));
+				break;
+			case FLOAT:
+				printf("%f", (const float)*((uint32_t *)value + i));
+				break;
+			case RATIONAL:
+				printf("%lf", IFD_Entry::parseRational(*((uint64_t *)value + i), false));
+				break;
+			case SRATIONAL:
+				printf("%lf", IFD_Entry::parseRational(*((uint64_t *)value + i), true));
+				break;
+			case DOUBLE:
+				printf("%lf", (double) *((uint64_t *)value + i));
+				break;
+		}
+
+		if (i < count - 1 && type != ASCII) {
+			printf(" ");
+		}
+
+		if (i == max_to_print - 1) {
+			printf("...");
+		}
+	}
+
+	printf(">");
+}
+
 // Initialize the map for Tiff Tag names.
-std::map<int, const char *> create_map() {
+std::map<int, const char *> create_tag_map() {
     std::map<int, const char *> m;
     m[254] = "NewSubfileType";
     m[255] = "SubfileType";
@@ -184,5 +260,23 @@ std::map<int, const char *> create_map() {
     return m;
 }
 
-const std::map<int, const char *> Tiff_Tag_Names = create_map();
+// Initialize the map for Tiff Type names.
+std::map<Tiff_Value_Type, const char *> create_type_map() {
+    std::map<Tiff_Value_Type, const char *> m;
+    m[BYTE] = "BYTE";
+    m[ASCII] = "ASCII";
+    m[SHORT] = "SHORT";
+    m[LONG] = "LONG";
+    m[RATIONAL] = "RATIONAL";
+    m[SBYTE] = "SBYTE";
+    m[UNDEFINED] = "UNDEFINED";
+    m[SSHORT] = "SSHORT";
+    m[SLONG] = "SLONG";
+    m[SRATIONAL] = "SRATIONAL";
+    m[FLOAT] = "FLOAT";
+    m[DOUBLE] = "DOUBLE";
+    return m;
+}
 
+const std::map<int, const char *> Tiff_Tag_Names = create_tag_map();
+const std::map<Tiff_Value_Type, const char *> Tiff_Type_Names = create_type_map();

@@ -64,8 +64,11 @@ std::map<uint16_t, IFD_Entry> CLI_TiffStat::parseTiffMeta(std::ifstream &file, b
 
         if (verbose) {
             std::cout << Tiff_Tag_Names.at(entry.tag) << " (" << entry.tag << ") ";
-            std::cout << "(" << entry.type << ") ";
-            std::cout << entry.count;
+            std::cout << Tiff_Type_Names.at(entry.type) << " (" << entry.type << ") ";
+            std::cout << entry.count << "<";
+
+            entry.printValues(20);
+
             std::cout << std::endl;
         } 
         

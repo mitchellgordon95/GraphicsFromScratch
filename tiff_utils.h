@@ -33,8 +33,15 @@ public:
 
     // Read an IFD Entry from a file.
     static IFD_Entry readFromFile(std::ifstream &file, EndianStreamReader reader);
+
+    // Parse an IFD Rational into a double
+    static double parseRational(uint64_t rational, bool sign);
+
+    // Print the values stored in this entry, specifying max number of elements to print.
+    void printValues(size_t max_to_print);
 };
 
 extern const std::map<int, const char *> Tiff_Tag_Names;
+extern const std::map<Tiff_Value_Type, const char *> Tiff_Type_Names;
 
 #endif

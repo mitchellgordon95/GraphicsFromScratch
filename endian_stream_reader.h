@@ -60,7 +60,7 @@ public:
         uint16_t * tmp = (uint16_t *) out;
 
         for (int i = 0; i < count; ++i) {
-            in.read((char*)tmp + i, 2);
+            in.read((char*)(tmp + i), 2);
         
             if (needSwap)
                 swapBytes(tmp+i);
@@ -74,7 +74,7 @@ public:
         uint32_t * tmp = (uint32_t *) out;
 
         for (int i = 0; i < count; ++i) {
-            in.read((char*)tmp + i, 4);
+            in.read((char*)(tmp + i), 4);
         
             if (needSwap)
                 swapBytes(tmp+i);
@@ -88,7 +88,7 @@ public:
         uint64_t * tmp = (uint64_t *) out;
 
         for (int i = 0; i < count; ++i) {
-            in.read((char*)tmp + i, 8);
+            in.read((char*)(tmp + i), 8);
         
             if (needSwap)
                 swapBytes(tmp+i);
