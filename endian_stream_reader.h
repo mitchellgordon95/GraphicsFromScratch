@@ -54,38 +54,46 @@ public:
         needSwap = (machineLittleEndian != streamLittleEndian);
     }
     
-    uint16_t getShort(std::ifstream &in) {
-        uint16_t out;
-
-        in.read((char*)&out, 2);
+    // Reads [count] shorts from the stream into a buffer.
+    void readShort(std::ifstream &in, char * out, int count) {
         
-        if (needSwap)
-            swapBytes(&out);
+        uint16_t * tmp = (uint16_t *) out;
 
-        return out;
+        for (int i = 0; i < count; ++i) {
+            in.read((char*)tmp + i, 2);
+        
+            if (needSwap)
+                swapBytes(tmp+i);
+        }
+
     }  
 
-    uint32_t getInt(std::ifstream &in) {
-        uint32_t out;
+    // Reads [count] ints from the stream into a buffer.
+    void readInt(std::ifstream &in, char * out, int count) {
+        
+        uint32_t * tmp = (uint32_t *) out;
 
-        in.read((char*)&out, 4);
+        for (int i = 0; i < count; ++i) {
+            in.read((char*)tmp + i, 4);
         
-        if (needSwap)
-            swapBytes(&out);
-        
-        return out;
+            if (needSwap)
+                swapBytes(tmp+i);
+        }
+
     }
 
-    uint64_t getLong(std::ifstream &in) {
-        uint64_t out;
-
-        in.read((char*)&out, 8);
+    // Reads [count] longs from the stream into a buffer.
+    void readLong(std::ifstream &in, char * out, int count) {
         
-        if (needSwap)
-            swapBytes(&out);
+        uint64_t * tmp = (uint64_t *) out;
 
-        return out;
+        for (int i = 0; i < count; ++i) {
+            in.read((char*)tmp + i, 8);
+        
+            if (needSwap)
+                swapBytes(tmp+i);
+        }
+
     }
-
 };
 #endif
