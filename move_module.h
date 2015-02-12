@@ -4,7 +4,7 @@
 #include "cli_module.h"
 
 // Implements the move command for the cli
-class CLI_Move : public CLI_Module 
+class CLI_Move : public CLI_Module
 {
 private:
     // Moves the pen to a specified location in 3 dimensions

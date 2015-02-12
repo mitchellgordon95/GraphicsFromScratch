@@ -23,12 +23,11 @@
 #include <ctype.h>
 #include "dispatcher_module.h"
 
-/*	Create checkerboard image	*/
-#define	checkImageWidth 1024
-#define	checkImageHeight 1024
-GLubyte checkImage[checkImageHeight][checkImageWidth][3];
-
 static GLint height;
+
+#define ImageHeight 1024
+#define ImageWidth 1024
+GLubyte imageArray[ImageHeight][ImageWidth][3];
 
 // The dispatcher for our CLI
 static Dispatcher dispatcher;
@@ -38,12 +37,12 @@ makeCheckImage(void)
 {
    int i, j, c;
     
-   for (i = 0; i < checkImageHeight; i++) {
-      for (j = 0; j < checkImageWidth; j++) {
+   for (i = 0; i < ImageHeight; i++) {
+      for (j = 0; j < ImageWidth; j++) {
          c = ((((i&0x8)==0)^((j&0x8)==0)))*255;
-         checkImage[i][j][0] = (GLubyte) c;
-         checkImage[i][j][1] = (GLubyte) c;
-         checkImage[i][j][2] = (GLubyte) c;
+         imageArray[i][j][0] = (GLubyte) c;
+         imageArray[i][j][1] = (GLubyte) c;
+         imageArray[i][j][2] = (GLubyte) c;
       }
    }
 }
@@ -78,8 +77,8 @@ display(void)
 {
    glClear(GL_COLOR_BUFFER_BIT);
    glRasterPos2i(0, 0);
-   glDrawPixels(checkImageWidth, checkImageHeight, GL_RGB, 
-                GL_UNSIGNED_BYTE, checkImage);
+   glDrawPixels(ImageWidth, ImageHeight, GL_RGB,
+                GL_UNSIGNED_BYTE, imageArray);
    glFlush();
 }
 
@@ -119,7 +118,7 @@ motion(int x, int y)
    
    screeny = height - (GLint) y;
    glRasterPos2i (x, screeny);
-   glCopyPixels (0, 0, checkImageWidth, checkImageHeight, GL_COLOR);
+   glCopyPixels (0, 0, ImageWidth, ImageHeight, GL_COLOR);
    glFlush ();
 }
 

@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <string.h>
 #include <map>
+#include <vector>
+#include <exception>
+#include <stdexcept>
 #include "endian_stream_reader.h"
 
 // The possible value types for a TIFF IFD entry
@@ -34,6 +37,10 @@ public:
     // Read an IFD Entry from a file.
     static IFD_Entry readFromFile(std::ifstream &file, EndianStreamReader reader);
 
+    // Get a value from the array. Casts the value to T and returns.
+    template<typename T>
+    T getValue(int index);
+
     // Parse an IFD Rational into a double
     static double parseRational(uint64_t rational, bool sign);
 
@@ -43,5 +50,22 @@ public:
 
 extern const std::map<int, const char *> Tiff_Tag_Names;
 extern const std::map<Tiff_Value_Type, const char *> Tiff_Type_Names;
+
+// Get the value from the specified position, casting to T
+template<typename T>
+T IFD_Entry::getValue(int index) {
+	switch ( sizeOfType(type) ) {
+	case 1:
+		return (T) *(value + index);
+	case 2:
+		return (T) *((uint16_t *)value + index);
+	case 4:
+		return (T) *((uint32_t *)value + index);
+	case 8:
+		return (T) *((uint64_t *)value + index);
+	}
+
+	throw std::runtime_error("getValue() went very wrong.");
+}
 
 #endif

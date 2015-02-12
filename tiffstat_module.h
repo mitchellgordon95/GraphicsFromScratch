@@ -19,7 +19,7 @@ public:
 
     // Given a file, parse the TIFF IFD into structs
     // Can optionally be verbose and print metadata to console
-    std::map<uint16_t, IFD_Entry> parseTiffMeta(std::ifstream &file, bool verbose);
+    static std::map<uint16_t, IFD_Entry> parseTiffMeta(std::ifstream &file, bool verbose);
 };
 
 #endif
