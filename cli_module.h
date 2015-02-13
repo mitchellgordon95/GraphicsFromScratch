@@ -28,5 +28,8 @@ public:
     // was recognized, false if the command is not recognized. 
     // NOTE: expects all commands to be lower case
     bool interpret(std::vector<char *> &command);
+
+    // A convenience function for parsing numerical arguments.
+    static float parseNumericalArg(char * param);
 };
 #endif

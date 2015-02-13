@@ -13,20 +13,10 @@ CLI_Move::~CLI_Move()
 
 void CLI_Move::execute(std::vector<char *> &params)
 {
-    char * endptr;
     float args[3];
     for (size_t i = 0; i < params.size(); ++i)
     {
-        args[i] = strtod(params[i], &endptr);
-        
-        // If endptr doesn't point to the end of the string
-        // then there was part of the token we couldn't parse.
-        if (*endptr != '\0')
-        {
-            char msg[1024];
-            sprintf(msg, "Could not parse arg %d", (int) i);
-            throw std::invalid_argument(msg);
-        }
+        args[i] = CLI_Module::parseNumericalArg(params[i]);
     }
     std::cout << " X=" << args[0] << " ";
     std::cout << " Y=" << args[1] << " ";

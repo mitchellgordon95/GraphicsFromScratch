@@ -16,6 +16,9 @@
 // TODO - Make this better
 extern GLubyte imageArray[1024][1024][3];
 
+// Initialize the static map for the last metadata read
+std::map<uint16_t, IFD_Entry> CLI_TiffRead::lastRead;
+
 CLI_TiffRead::~CLI_TiffRead()
 {
 }
@@ -30,6 +33,9 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     }
 
     std::map<uint16_t, IFD_Entry> entries = CLI_TiffStat::parseTiffMeta(file, false);
+
+    // Store the entries in case TiffWrite wants it later
+    CLI_TiffRead::lastRead = std::map<uint16_t, IFD_Entry>(entries);
 
     // We don't support compression yet
     if (entries[259].getValue<uint16_t>(0) != 1)
@@ -119,3 +125,4 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
 
     std::cout << "read file " << params[0] << std::endl;
 }
+
