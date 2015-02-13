@@ -1,0 +1,3 @@
+tiffstat ../images/play.tif
+tiffread ../images/play.tif
+tiffwrite play_partial.tif 200 350 400 700
