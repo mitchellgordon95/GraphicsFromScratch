@@ -56,7 +56,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
 
     uint32_t rowsPerStrip = entries[278].getValue<uint32_t>(0);
 
-    long currentRow = 0;
+    uint64_t currentRow = 0;
 
     // Read all the strips into memory.
 
