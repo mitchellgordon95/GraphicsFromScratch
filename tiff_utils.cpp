@@ -137,20 +137,16 @@ IFD_Entry::~IFD_Entry() {
 }
 
 // Parse an IFD Rational into a double
-double IFD_Entry::parseRational(uint64_t rational, bool sign) {
+double IFD_Entry::parseRational(uint64_t * rational, bool sign) {
 	double numerator, denominator;
-	// TODO - Fix Rational bug, buried somewhere in here.
-	//std::cout << "Rational: " << rational << std::endl;
 
 	if (!sign) {
-		//std::cout << "Numerator: " << (rational >> 32) << std::endl;
-		//std::cout << "Denominator: " << (rational & 0xffff) << std::endl;
-		numerator = static_cast<double>(rational >> 32);
-		denominator = static_cast<double>(rational & 0xffff);
+		numerator = (double) *((uint32_t *) rational);
+		denominator = (double) *((uint32_t *) rational + 1);
 	}
 	else {
-		numerator = (double) ((int16_t) (rational >> 32));
-		denominator = (double) ((int16_t)(rational & 0xffff));
+		numerator = (double) *((int32_t *) rational);
+		denominator = (double) *((int32_t *) rational + 1);
 	}
 
 
@@ -198,10 +194,10 @@ void IFD_Entry::printValues(size_t max_to_print) {
 				printf("%f", (const float)*((uint32_t *)value + i));
 				break;
 			case RATIONAL:
-				printf("%lf", IFD_Entry::parseRational(*((uint64_t *)value + i), false));
+				printf("%lf", IFD_Entry::parseRational((uint64_t *)value + i, false));
 				break;
 			case SRATIONAL:
-				printf("%lf", IFD_Entry::parseRational(*((uint64_t *)value + i), true));
+				printf("%lf", IFD_Entry::parseRational((uint64_t * )value + i, true));
 				break;
 			case DOUBLE:
 				printf("%lf", (double) *((uint64_t *)value + i));

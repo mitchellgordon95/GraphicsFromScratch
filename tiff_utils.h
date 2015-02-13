@@ -51,7 +51,7 @@ public:
     void setValue(void * input, size_t size, size_t count, Tiff_Value_Type type);
 
     // Parse an IFD Rational into a double
-    static double parseRational(uint64_t rational, bool sign);
+    static double parseRational(uint64_t * rational, bool sign);
 
     // Print the values stored in this entry, specifying max number of elements to print.
     void printValues(size_t max_to_print);
