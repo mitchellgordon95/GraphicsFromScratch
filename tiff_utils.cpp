@@ -91,6 +91,37 @@ IFD_Entry IFD_Entry::readFromFile(std::ifstream &file, EndianStreamReader reader
     return out;
 } 
 
+// Write an IFD Entry to a file. Takes a stream to write the entry to and an offset
+// where values should be written if they don't fit in 4 bytes.
+uint32_t IFD_Entry::writeToFile(std::ostream &file, uint32_t valuePointer) {
+
+	file.write((char*)&tag, 2);
+	file.write((char*)&type, 2);
+	file.write((char*)&count, 4);
+
+	size_t byteSize = sizeOfType(type) * count;
+	if ( byteSize < 5 ) {
+		file.write(value, byteSize);
+
+		if (byteSize < 4)
+			file.write("\0\0\0", 4 - byteSize);
+	}
+	else {
+		file.write((char*)&valuePointer, 4);
+
+		int lastPos = file.tellp();
+		file.seekp(valuePointer, std::ios::beg);
+
+		file.write(value, byteSize);
+
+		file.seekp(lastPos, std::ios::beg);
+
+		valuePointer += byteSize;
+	}
+
+	return valuePointer;
+}
+
 // Copy Constructor
 IFD_Entry::IFD_Entry(const IFD_Entry &other): tag(other.tag), type(other.type), count(other.count) {
     // Make a dynamic copy of value.
@@ -124,6 +155,15 @@ double IFD_Entry::parseRational(uint64_t rational, bool sign) {
 
 
 	return numerator / denominator;
+}
+
+// Resets the value of this entry
+void IFD_Entry::setValue(void * input, size_t size, size_t count, Tiff_Value_Type type) {
+	delete [] value;
+	value = new char[size];
+	memcpy(value, input, size);
+	this->count = count;
+	this->type = type;
 }
 
 // Print the values of this IFD_Entry

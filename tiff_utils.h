@@ -37,9 +37,18 @@ public:
     // Read an IFD Entry from a file.
     static IFD_Entry readFromFile(std::ifstream &file, EndianStreamReader reader);
 
+    // Write an IFD Entry to a file. Takes a stream to write the entry to and an offset
+    // where values should be written if they don't fit in 4 bytes. The offset plus
+    // the number of bytes written is returned.
+    uint32_t writeToFile(std::ostream &entry_out, uint32_t valuePointer);
+
     // Get a value from the array. Casts the value to T and returns.
     template<typename T>
     T getValue(int index);
+
+    // Resets the value of this entry
+    // @param size 	the size in bytes of the input
+    void setValue(void * input, size_t size, size_t count, Tiff_Value_Type type);
 
     // Parse an IFD Rational into a double
     static double parseRational(uint64_t rational, bool sign);

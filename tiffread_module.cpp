@@ -25,7 +25,7 @@ CLI_TiffRead::~CLI_TiffRead()
 
 void CLI_TiffRead::execute(std::vector<char *> &params)
 {
-    std::ifstream file(params[0]);
+    std::ifstream file(params[0], std::ios::binary);
     
     if ( !file.is_open() )
     {
@@ -33,9 +33,6 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     }
 
     std::map<uint16_t, IFD_Entry> entries = CLI_TiffStat::parseTiffMeta(file, false);
-
-    // Store the entries in case TiffWrite wants it later
-    CLI_TiffRead::lastRead = std::map<uint16_t, IFD_Entry>(entries);
 
     // We don't support compression yet
     if (entries[259].getValue<uint16_t>(0) != 1)
@@ -49,26 +46,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     if (imageWidth > 1024 || imageHeight > 1024)
     	throw std::runtime_error("We don't support images bigger than 1024x1024 yet.");
 
-    // We only support 8-bit grayscale and 24-bit RGB
-    enum ColorScheme { RGB24bit, GrayScale8bit};
-    ColorScheme scheme;
-
-    int photometric = entries[262].getValue<uint16_t>(0);
-
-    // We don't support palette color images
-    if (photometric == 3)
-    	throw std::runtime_error("We don't support palette color images yet.");
-
-    IFD_Entry bps = entries[258]; // Bits per sample
-    if ( bps.count == 1 && bps.getValue<uint16_t>(0) == 8 )
-    	scheme = GrayScale8bit;
-    else if (bps.count == 3 && bps.getValue<uint16_t>(0) == 8
-    						&& bps.getValue<uint16_t>(1) == 8
-    						&& bps.getValue<uint16_t>(2) == 8
-    						&& photometric == 2)
-    	scheme = RGB24bit;
-    else
-    	throw std::runtime_error("Unsupported color scheme.");
+    TiffColorScheme scheme = getColorScheme(entries);
 
     IFD_Entry offsetEntry = entries[273];
     IFD_Entry byteCountsEntry = entries[279];
@@ -85,6 +63,8 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     char * buffer = 0;
     if (scheme == GrayScale8bit)
     	buffer = new char[imageWidth];
+
+	int photometric = entries[262].getValue<uint16_t>(0);
 
     for (size_t i = 0 ; i < offsetEntry.count; ++i) {
     	// Seek to the beginning of the strip
@@ -120,9 +100,33 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     // Clean up
     delete [] buffer;
 
+    // Store the entries in case TiffWrite wants it later
+    CLI_TiffRead::lastRead = std::map<uint16_t, IFD_Entry>(entries);
+
     // Make the window refresh.
     glutPostRedisplay();
 
     std::cout << "read file " << params[0] << std::endl;
+}
+
+TiffColorScheme CLI_TiffRead::getColorScheme (std::map<uint16_t, IFD_Entry> &entries) {
+
+	int photometric = entries[262].getValue<uint16_t>(0);
+
+    // We don't support palette color images
+    if (photometric == 3)
+    	throw std::runtime_error("We don't support palette color images yet.");
+
+	IFD_Entry bps = entries[258];
+	if ( bps.count == 1 && bps.getValue<uint16_t>(0) == 8 )
+		return GrayScale8bit;
+	else if (bps.count == 3 && bps.getValue<uint16_t>(0) == 8
+							&& bps.getValue<uint16_t>(1) == 8
+							&& bps.getValue<uint16_t>(2) == 8
+							&& photometric == 2)
+		return RGB24bit;
+	else
+		throw std::runtime_error("Unsupported color scheme.");
+
 }
 

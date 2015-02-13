@@ -4,6 +4,9 @@
 #include "cli_module.h"
 #include "tiff_utils.h"
 
+// We only support 8-bit grayscale and 24-bit RGB
+enum TiffColorScheme { RGB24bit = 0, GrayScale8bit = 1};
+
 // Implements the TiffRead command for the cli
 class CLI_TiffRead : public CLI_Module 
 {
@@ -19,6 +22,11 @@ public:
 
     // Returns the metadata of the last tiff file read
     static std::map<uint16_t, IFD_Entry> getLastRead() {return lastRead;}
+
+    // Given the BitsPerSample tag and the photometric value, returns
+    // the color scheme
+    static TiffColorScheme getColorScheme (std::map<uint16_t, IFD_Entry> &entries);
+
 
 };
 
