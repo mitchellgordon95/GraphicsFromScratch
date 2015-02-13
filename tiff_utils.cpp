@@ -131,7 +131,7 @@ void IFD_Entry::printValues(size_t max_to_print) {
 	for (size_t i = 0; i < count && i < max_to_print; ++i) {
 		switch (type) {
 			case BYTE:
-				printf("%hhu", *(value + i));
+				printf("0x%hhx", *(value + i));
 				break;
 			case ASCII:
 				std::cout << *(value + i);

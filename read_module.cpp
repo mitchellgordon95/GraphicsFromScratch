@@ -32,8 +32,18 @@ void CLI_Read::execute(std::vector<char *> &params)
         {
             file.getline(next_line, 1024);
             
-            // TODO - Trim whitespace for less strict commenting rules
-            if ( next_line[0] == '#' )
+            bool isComment = false;
+
+            for (size_t i = 0 ; i < strlen(next_line); ++i) {
+            	if (next_line[i] == '\t' || next_line[i] == ' ')
+            		continue;
+            	else {
+            		isComment = (next_line[i] == '#');
+            		break;
+            	}
+            }
+
+            if (isComment)
                 continue;
 
             dispatcher.interpret( next_line );

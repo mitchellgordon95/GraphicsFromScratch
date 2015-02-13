@@ -22,6 +22,7 @@ void CLI_TiffStat::execute(std::vector<char *> &params)
         throw std::invalid_argument(std::string("Could not read file ") + params[0]);
     }
 
+    std::cout << std::endl;
     parseTiffMeta(file, true);    
 }
 
@@ -37,9 +38,10 @@ std::map<uint16_t, IFD_Entry> CLI_TiffStat::parseTiffMeta(std::ifstream &file, b
     uint16_t magicNo;
     reader.readShort(file, (char *) &magicNo, 1); 
 
-    if (magicNo != 42 || ! (littleEndian || strncmp(endianess, "MM", 2) == 0)) {
-        throw std::runtime_error("Unrecognized file type");
-    }
+    if (magicNo != 42)
+        throw std::runtime_error("Unrecognized file type, bad magic number.");
+    else if (!littleEndian && strncmp(endianess, "MM", 2) != 0)
+    	throw std::runtime_error("Unrecognized file type, endianess not specified.");
 
     uint32_t ifd_address;
     reader.readInt(file, (char *) &ifd_address, 1);
@@ -63,13 +65,26 @@ std::map<uint16_t, IFD_Entry> CLI_TiffStat::parseTiffMeta(std::ifstream &file, b
         entries.insert(std::pair<uint16_t, IFD_Entry>(entry.tag, entry));
 
         if (verbose) {
-            std::cout << Tiff_Tag_Names.at(entry.tag) << " (" << entry.tag << ") ";
-            std::cout << Tiff_Type_Names.at(entry.type) << " (" << entry.type << ") ";
-            std::cout << entry.count << "<";
+			// Print the tag name and number
+        	if (Tiff_Tag_Names.find(entry.tag) != Tiff_Tag_Names.end())
+				std::cout << Tiff_Tag_Names.at(entry.tag);
+			else
+				std::cout << "*Unknown*";
+			std::cout << " (" << entry.tag << ") ";
 
-            entry.printValues(20);
+			// Print the tag type and type number
+			if (Tiff_Type_Names.find(entry.type) != Tiff_Type_Names.end())
+				std::cout << Tiff_Type_Names.at(entry.type);
+			else
+				std::cout << "*Unknown*";
+			std::cout << " (" << entry.type << ") ";
 
-            std::cout << std::endl;
+			std::cout << entry.count << "<";
+
+			entry.printValues(20);
+
+			std::cout << std::endl;
+
         } 
         
         if (file.fail())

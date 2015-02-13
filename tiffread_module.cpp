@@ -47,12 +47,19 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     enum ColorScheme { RGB24bit, GrayScale8bit};
     ColorScheme scheme;
 
+    int photometric = entries[262].getValue<uint16_t>(0);
+
+    // We don't support palette color images
+    if (photometric == 3)
+    	throw std::runtime_error("We don't support palette color images yet.");
+
     IFD_Entry bps = entries[258]; // Bits per sample
     if ( bps.count == 1 && bps.getValue<uint16_t>(0) == 8 )
     	scheme = GrayScale8bit;
     else if (bps.count == 3 && bps.getValue<uint16_t>(0) == 8
     						&& bps.getValue<uint16_t>(1) == 8
-    						&& bps.getValue<uint16_t>(2) == 8)
+    						&& bps.getValue<uint16_t>(2) == 8
+    						&& photometric == 2)
     	scheme = RGB24bit;
     else
     	throw std::runtime_error("Unsupported color scheme.");
@@ -82,16 +89,22 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     		// If it's already in 24 bit RGB, then we don't have to do any converting.
     		if (scheme == RGB24bit) {
     			// We have to flip the image, because TIFF is top to bottom, but OpenGL is bottom to top.
-    			file.read((char*) imageArray[imageHeight - currentRow][0], imageWidth * 3);
+    			file.read((char*) imageArray[imageHeight - currentRow - 1][0], imageWidth * 3);
     		}
     		else if (scheme == GrayScale8bit) {
     			// Since we're rendering in 24bit RGB, we'll have to spread the grayscale
     			// values out.
     			file.read(buffer, imageWidth);
     			for (size_t col = 0; col < imageWidth; ++col) {
-    				imageArray[imageHeight - currentRow][col][0] = buffer[col];
-    				imageArray[imageHeight - currentRow][col][1] = buffer[col];
-    				imageArray[imageHeight - currentRow][col][2] = buffer[col];
+    				char val = buffer[col];
+
+					// If 0 is white we have to flip the values.
+					if (photometric == 0)
+						val = 0xff - val;
+
+    				imageArray[imageHeight - currentRow - 1][col][0] = val;
+    				imageArray[imageHeight - currentRow - 1][col][1] = val;
+    				imageArray[imageHeight - currentRow - 1][col][2] = val;
     			}
     		}
     		++currentRow;
