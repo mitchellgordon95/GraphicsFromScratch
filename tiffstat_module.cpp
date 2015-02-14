@@ -22,6 +22,8 @@ void CLI_TiffStat::execute(std::vector<char *> &params)
         throw std::invalid_argument(std::string("Could not read file ") + params[0]);
     }
 
+    std::cout << "Metadata for " << params[0] << ":" << std::endl;
+
     std::cout << std::endl;
     parseTiffMeta(file, true);    
 }

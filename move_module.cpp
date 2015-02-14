@@ -13,6 +13,8 @@ CLI_Move::~CLI_Move()
 
 void CLI_Move::execute(std::vector<char *> &params)
 {
+
+	std::cout << "Move: ";
     float args[3];
     for (size_t i = 0; i < params.size(); ++i)
     {

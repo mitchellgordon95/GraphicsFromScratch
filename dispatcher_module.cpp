@@ -6,6 +6,7 @@
 #include "tiffstat_module.h"
 #include "tiffread_module.h"
 #include "tiffwrite_module.h"
+#include "echo_module.h"
 #include <cstddef>
 #include <string.h>
 
@@ -14,6 +15,7 @@ Dispatcher::Dispatcher() : CLI_Module("", 0)
 {
     // Add all the modules we know about to a vector
     _modules.push_back(new CLI_Move());    
+    _modules.push_back(new CLI_Echo());
     _modules.push_back(new CLI_Draw());    
     _modules.push_back(new CLI_Color());    
     _modules.push_back(new CLI_Read(*this));

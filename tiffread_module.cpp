@@ -106,7 +106,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     // Make the window refresh.
     glutPostRedisplay();
 
-    std::cout << "read file " << params[0] << std::endl;
+    std::cout << "Displaying TIFF file " << params[0] << " on screen." << std::endl;
 }
 
 TiffColorScheme CLI_TiffRead::getColorScheme (std::map<uint16_t, IFD_Entry> &entries) {
