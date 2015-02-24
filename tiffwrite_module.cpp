@@ -11,10 +11,6 @@
 #include "tiff_utils.h"
 #include "tiffread_module.h"
 
-// Get the global image array
-// TODO - Make this better
-extern GLubyte imageArray[1024][1024][3];
-
 CLI_TiffWrite::~CLI_TiffWrite()
 {
 }
@@ -83,13 +79,13 @@ void CLI_TiffWrite::execute(std::vector<char *> &params)
 		// If it's already in 24 bit RGB, then we don't have to do any color converting.
 		if (scheme == RGB24bit) {
 			// We have to flip the image, because TIFF is top to bottom, but OpenGL is bottom to top.
-			file.write((char*) &imageArray[y1 - i][x0], rowByteSize);
+			file.write((char*) CLI_Global::getPixel(y1 - i, 0), rowByteSize);
 		}
 		else if (scheme == GrayScale8bit) {
 			// Since we're rendering in 24bit RGB, we'll have to take a single value
 			// from each pixel.
 			for (size_t k = 0; k < newWidth; ++k)
-				file.write((char*)&imageArray[y1 - i][x0 + k][0], 1);
+				file.write((char*)CLI_Global::getPixel(y1 - i, k), 1);
 		}
 	}
 

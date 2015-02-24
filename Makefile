@@ -23,7 +23,7 @@ LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 
 all: main
 
-CLI_OBJECTS=main.o cli_module.o dispatcher_module.o move_module.o draw_module.o color_module.o read_module.o tiffstat_module.o tiffread_module.o tiffwrite_module.o tiff_utils.o
+CLI_OBJECTS=main.o cli_module.o dispatcher_module.o move_module.o draw_module.o color_module.o read_module.o tiffstat_module.o tiffread_module.o tiffwrite_module.o tiff_utils.o cli_global.o
 
 main: $(CLI_OBJECTS)
 	$(LINK) $(CLI_OBJECTS) $(LDADD) $(LIBS)

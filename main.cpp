@@ -22,12 +22,9 @@
 #include <string.h>
 #include <ctype.h>
 #include "dispatcher_module.h"
+#include "cli_global.h"
 
 static GLint height;
-
-#define ImageHeight 1024
-#define ImageWidth 1024
-GLubyte imageArray[ImageHeight][ImageWidth][3];
 
 // The dispatcher for our CLI
 static Dispatcher dispatcher;
@@ -37,12 +34,10 @@ makeCheckImage(void)
 {
    int i, j, c;
     
-   for (i = 0; i < ImageHeight; i++) {
-      for (j = 0; j < ImageWidth; j++) {
+   for (i = 0; i < CLI_Global::imageHeight; i++) {
+      for (j = 0; j < CLI_Global::imageWidth; j++) {
          c = ((((i&0x8)==0)^((j&0x8)==0)))*255;
-         imageArray[i][j][0] = (GLubyte) c;
-         imageArray[i][j][1] = (GLubyte) c;
-         imageArray[i][j][2] = (GLubyte) c;
+         	 CLI_Global::setPixel(i, j, c, c, c);
       }
    }
 }
@@ -58,6 +53,7 @@ makeCheckImage(void)
 void 
 init(void)
 {    
+   CLI_Global::resizeImage(1024, 1024);
    glClearColor (0.0, 0.0, 0.0, 0.0);
    glShadeModel(GL_FLAT);
    makeCheckImage();
@@ -77,8 +73,8 @@ display(void)
 {
    glClear(GL_COLOR_BUFFER_BIT);
    glRasterPos2i(0, 0);
-   glDrawPixels(ImageWidth, ImageHeight, GL_RGB,
-                GL_UNSIGNED_BYTE, imageArray);
+   glDrawPixels(CLI_Global::imageWidth, CLI_Global::imageHeight, GL_RGB,
+                GL_UNSIGNED_BYTE, CLI_Global::imageArray);
    glFlush();
 }
 
@@ -118,7 +114,7 @@ motion(int x, int y)
    
    screeny = height - (GLint) y;
    glRasterPos2i (x, screeny);
-   glCopyPixels (0, 0, ImageWidth, ImageHeight, GL_COLOR);
+   glCopyPixels (0, 0, CLI_Global::imageWidth, CLI_Global::imageHeight, GL_COLOR);
    glFlush ();
 }
 

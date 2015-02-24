@@ -12,10 +12,6 @@
 #include <GL/glut.h>
 #include "tiffstat_module.h"
 
-// Get the global image array
-// TODO - Make this better
-extern GLubyte imageArray[1024][1024][3];
-
 // Initialize the static map for the last metadata read
 std::map<uint16_t, IFD_Entry> CLI_TiffRead::lastRead;
 
@@ -75,7 +71,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     		// If it's already in 24 bit RGB, then we don't have to do any converting.
     		if (scheme == RGB24bit) {
     			// We have to flip the image, because TIFF is top to bottom, but OpenGL is bottom to top.
-    			file.read((char*) imageArray[imageHeight - currentRow - 1][0], imageWidth * 3);
+    			file.read((char*) CLI_Global::getPixel(imageHeight - currentRow - 1, 0), imageWidth * 3);
     		}
     		else if (scheme == GrayScale8bit) {
     			// Since we're rendering in 24bit RGB, we'll have to spread the grayscale
@@ -88,9 +84,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
 					if (photometric == 0)
 						val = 0xff - val;
 
-    				imageArray[imageHeight - currentRow - 1][col][0] = val;
-    				imageArray[imageHeight - currentRow - 1][col][1] = val;
-    				imageArray[imageHeight - currentRow - 1][col][2] = val;
+					CLI_Global::setPixel(currentRow, col, val, val, val);
     			}
     		}
     		++currentRow;
