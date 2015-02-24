@@ -52,5 +52,7 @@ void CLI_Read::execute(std::vector<char *> &params)
         std::cout << "End script " << params[0] << std::endl;
     }
 
+    file.close();
+
     --depth_count;
 }

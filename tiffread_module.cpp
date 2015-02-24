@@ -93,6 +93,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
 
     // Clean up
     delete [] buffer;
+    file.close();
 
     // Store the entries in case TiffWrite wants it later
     CLI_TiffRead::lastRead = std::map<uint16_t, IFD_Entry>(entries);
