@@ -38,9 +38,10 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     uint32_t imageWidth = entries[256].getValue<uint32_t>(0);
     uint32_t imageHeight = entries[257].getValue<uint32_t>(0);
 
-    // We don't support images greater than 1024 x 1024 yet
-    if (imageWidth > 1024 || imageHeight > 1024)
-    	throw std::runtime_error("We don't support images bigger than 1024x1024 yet.");
+    // Resize the image if necessary.
+    if ((int) imageWidth != CLI_Global::imageWidth || (int) imageHeight != CLI_Global::imageHeight)
+    	CLI_Global::resizeImage(imageWidth, imageHeight);
+
 
     TiffColorScheme scheme = getColorScheme(entries);
 
