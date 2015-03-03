@@ -14,17 +14,28 @@ namespace CLI_Global {
 		GLubyte B;
 	};
 
-	extern int imageWidth, imageHeight;
-	extern Pixel * imageArray;
+	struct Image {
+		Pixel * buffer;
+		int width;
+		int height;
+	};
+
+	extern Image displayImage;
 
 	// Resize the image, clearing any pixels that have been set.
 	void resizeImage(int width, int height);
 
-	// Retrieves a pointer to a pixel in the buffer.
+	// Retrieves a pointer to a pixel in the buffer. Defaults to the currently displayed image.
 	Pixel * getPixel(int row, int col);
 
-	// Set a pixel to a certain RGB color.
+	// Retrieves a pointer to a pixel in the buffer.
+	Pixel * getPixel(int row, int col, Image image);
+
+	// Set a pixel to a certain RGB color. Defaults to the currently displayed image.
 	void setPixel(int row, int col, Pixel p);
+
+	// Set a pixel to a certain RGB color.
+	void setPixel(int row, int col, Pixel p, Image image);
 
 }
 

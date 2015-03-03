@@ -34,8 +34,8 @@ void makeCheckImage(void) {
 	int i, j;
 	GLubyte c;
 
-	for (i = 0; i < imageHeight; i++) {
-		for (j = 0; j < imageWidth; j++) {
+	for (i = 0; i < displayImage.height; i++) {
+		for (j = 0; j < displayImage.width; j++) {
 			c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;
 			setPixel(i, j, {c, c, c});
 		}
@@ -69,8 +69,8 @@ void init(void) {
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glRasterPos2i(0, 0);
-	glDrawPixels(imageWidth, imageHeight, GL_RGB,
-			GL_UNSIGNED_BYTE, imageArray);
+	glDrawPixels(displayImage.width, displayImage.height, GL_RGB,
+			GL_UNSIGNED_BYTE, displayImage.buffer);
 	glFlush();
 }
 
@@ -86,7 +86,7 @@ void display(void) {
 void reshape(int w, int h) {
 
 	// Don't really let anyone reshape the window.
-	glutReshapeWindow(imageWidth, imageHeight);
+	glutReshapeWindow(displayImage.width, displayImage.height);
 
 	glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 	height = (GLint) h;
@@ -110,7 +110,7 @@ void motion(int x, int y) {
 
 	screeny = height - (GLint) y;
 	glRasterPos2i(x, screeny);
-	glCopyPixels(0, 0, imageWidth, imageHeight,
+	glCopyPixels(0, 0, displayImage.width, displayImage.height,
 			GL_COLOR);
 	glFlush();
 }

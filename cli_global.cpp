@@ -9,37 +9,43 @@
 using namespace CLI_Global;
 
 // Allocate space in the object file for static members.
-int CLI_Global::imageWidth;
-int CLI_Global::imageHeight;
-Pixel * CLI_Global::imageArray = 0;
+Image CLI_Global::displayImage;
 
 // Resizes the image on the screen, clearing the image.
 void CLI_Global::resizeImage(int width, int height) {
 
 	// Tear down the old image, if necessary.
-	if (imageArray != 0)
-		free(imageArray);
+	if (displayImage.buffer != 0)
+		free(displayImage.buffer);
 
-	imageWidth = width;
-	imageHeight = height;
+	displayImage.width = width;
+	displayImage.height = height;
 
 	// Initialize the new arrays
-	imageArray = (Pixel * ) malloc(width * height * sizeof(Pixel));
+	displayImage.buffer = (Pixel * ) malloc(width * height * sizeof(Pixel));
 
 	// Reequest that the window be resized to the image shape.
 	glutReshapeWindow(width, height);
 }
 
 Pixel * CLI_Global::getPixel(int row, int col) {
-	if (row > (int) imageHeight || col > (int) imageWidth)
+	return getPixel(row, col, displayImage);
+}
+
+Pixel * CLI_Global::getPixel(int row, int col, Image image) {
+	if (row > (int) image.height || col > (int) image.width)
 		throw std::runtime_error("Invalid pixel coordinates.");
 
-	return imageArray + (row * imageWidth + col);
+	return image.buffer + (row * image.width + col);
 }
 
 void CLI_Global::setPixel(int row, int col, Pixel p) {
+	setPixel(row, col, p, displayImage);
+}
 
-	Pixel * pixel = getPixel(row, col);
+void CLI_Global::setPixel(int row, int col, Pixel p, Image image) {
+
+	Pixel * pixel = getPixel(row, col, image);
 	pixel->R = p.R;
 	pixel->G = p.G;
 	pixel->B = p.B;

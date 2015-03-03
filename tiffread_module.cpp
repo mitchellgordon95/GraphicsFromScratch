@@ -39,7 +39,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     uint32_t imageHeight = entries[257].getValue<uint32_t>(0);
 
     // Resize the image if necessary.
-    if ((int) imageWidth != CLI_Global::imageWidth || (int) imageHeight != CLI_Global::imageHeight)
+    if ((int) imageWidth != CLI_Global::displayImage.width || (int) imageHeight != CLI_Global::displayImage.height)
     	CLI_Global::resizeImage(imageWidth, imageHeight);
 
 

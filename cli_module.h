@@ -18,9 +18,11 @@ private:
     const char * keyword;
     
     // The number of parameters this module expects
-    size_t param_count;
+    int param_count;
 public:
-    // Constructor. Takes a keyword to associate the module with
+    // Constructor. Takes a keyword to associate the module with and the number
+    // of parameters the module expects. Modules with variable parameters should
+    // set param_count to -1.
     CLI_Module(const char * k, int p): keyword(k), param_count(p) {};
 
     // Virtual destructor
