@@ -6,10 +6,12 @@
 #include <exception>
 #include <stdexcept>
 
+using namespace CLI_Global;
+
 // Allocate space in the object file for static members.
 int CLI_Global::imageWidth;
 int CLI_Global::imageHeight;
-GLubyte * CLI_Global::imageArray = 0;
+Pixel * CLI_Global::imageArray = 0;
 
 // Resizes the image on the screen, clearing the image.
 void CLI_Global::resizeImage(int width, int height) {
@@ -22,24 +24,24 @@ void CLI_Global::resizeImage(int width, int height) {
 	imageHeight = height;
 
 	// Initialize the new arrays
-	imageArray = (GLubyte * ) malloc(width * height * 3 * sizeof(GLubyte));
+	imageArray = (Pixel * ) malloc(width * height * sizeof(Pixel));
 
 	// Reequest that the window be resized to the image shape.
 	glutReshapeWindow(width, height);
 }
 
-GLubyte * CLI_Global::getPixel(int row, int col) {
+Pixel * CLI_Global::getPixel(int row, int col) {
 	if (row > (int) imageHeight || col > (int) imageWidth)
 		throw std::runtime_error("Invalid pixel coordinates.");
 
-	return imageArray + (row * imageWidth + col) * 3;
+	return imageArray + (row * imageWidth + col);
 }
 
-void CLI_Global::setPixel(int row, int col, int R, int G, int B) {
+void CLI_Global::setPixel(int row, int col, Pixel p) {
 
-	GLubyte * pixel = getPixel(row, col);
-	*pixel = R;
-	*(pixel + 1) = G;
-	*(pixel + 2) = B;
+	Pixel * pixel = getPixel(row, col);
+	pixel->R = p.R;
+	pixel->G = p.G;
+	pixel->B = p.B;
 
 }

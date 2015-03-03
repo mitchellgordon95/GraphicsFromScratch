@@ -79,13 +79,13 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     			// values out.
     			file.read(buffer, imageWidth);
     			for (size_t col = 0; col < imageWidth; ++col) {
-    				char val = buffer[col];
+    				GLubyte val = (GLubyte) buffer[col];
 
 					// If 0 is white we have to flip the values.
 					if (photometric == 0)
 						val = 0xff - val;
 
-					CLI_Global::setPixel(currentRow, col, val, val, val);
+					CLI_Global::setPixel(currentRow, col, {val, val, val});
     			}
     		}
     		++currentRow;

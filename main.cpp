@@ -25,16 +25,19 @@
 
 static GLint height;
 
+using namespace CLI_Global;
+
 // The dispatcher for our CLI
 static Dispatcher dispatcher;
 
 void makeCheckImage(void) {
-	int i, j, c;
+	int i, j;
+	GLubyte c;
 
-	for (i = 0; i < CLI_Global::imageHeight; i++) {
-		for (j = 0; j < CLI_Global::imageWidth; j++) {
+	for (i = 0; i < imageHeight; i++) {
+		for (j = 0; j < imageWidth; j++) {
 			c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;
-			CLI_Global::setPixel(i, j, c, c, c);
+			setPixel(i, j, {c, c, c});
 		}
 	}
 }
@@ -48,7 +51,7 @@ void makeCheckImage(void) {
  * Returns:	  void
  */
 void init(void) {
-	CLI_Global::resizeImage(256, 256);
+	resizeImage(256, 256);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
 	makeCheckImage();
@@ -66,8 +69,8 @@ void init(void) {
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glRasterPos2i(0, 0);
-	glDrawPixels(CLI_Global::imageWidth, CLI_Global::imageHeight, GL_RGB,
-			GL_UNSIGNED_BYTE, CLI_Global::imageArray);
+	glDrawPixels(imageWidth, imageHeight, GL_RGB,
+			GL_UNSIGNED_BYTE, imageArray);
 	glFlush();
 }
 
@@ -83,7 +86,7 @@ void display(void) {
 void reshape(int w, int h) {
 
 	// Don't really let anyone reshape the window.
-	glutReshapeWindow(CLI_Global::imageWidth, CLI_Global::imageHeight);
+	glutReshapeWindow(imageWidth, imageHeight);
 
 	glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 	height = (GLint) h;
@@ -107,7 +110,7 @@ void motion(int x, int y) {
 
 	screeny = height - (GLint) y;
 	glRasterPos2i(x, screeny);
-	glCopyPixels(0, 0, CLI_Global::imageWidth, CLI_Global::imageHeight,
+	glCopyPixels(0, 0, imageWidth, imageHeight,
 			GL_COLOR);
 	glFlush();
 }
