@@ -28,12 +28,27 @@ void CLI_Global::resizeImage(int width, int height) {
 	glutReshapeWindow(width, height);
 }
 
+// Allocates an image and its buffer.
+Image CLI_Global::createImage(int width, int height) {
+	Image out;
+	out.width = width;
+	out.height = height;
+	out.buffer = (Pixel *) malloc(width * height * sizeof(Pixel));
+
+	return out;
+}
+
+// Frees an image's buffer in memory
+void CLI_Global::deleteImage(Image image) {
+	free(image.buffer);
+}
+
 Pixel * CLI_Global::getPixel(int row, int col) {
 	return getPixel(row, col, displayImage);
 }
 
 Pixel * CLI_Global::getPixel(int row, int col, Image image) {
-	if (row > (int) image.height || col > (int) image.width)
+	if (row >= image.height || col >= image.width)
 		throw std::runtime_error("Invalid pixel coordinates.");
 
 	return image.buffer + (row * image.width + col);

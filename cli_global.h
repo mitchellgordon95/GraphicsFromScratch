@@ -25,6 +25,12 @@ namespace CLI_Global {
 	// Resize the image, clearing any pixels that have been set.
 	void resizeImage(int width, int height);
 
+	// Allocates a new image in memory.
+	Image createImage(int width, int height);
+
+	// Frees the image in memory
+	void deleteImage(Image image);
+
 	// Retrieves a pointer to a pixel in the buffer. Defaults to the currently displayed image.
 	Pixel * getPixel(int row, int col);
 
