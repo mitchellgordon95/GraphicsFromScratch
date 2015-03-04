@@ -85,7 +85,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
 					if (photometric == 0)
 						val = 0xff - val;
 
-					CLI_Global::setPixel(currentRow, col, {val, val, val});
+					CLI_Global::setPixel(imageHeight - currentRow - 1, col, {val, val, val});
     			}
     		}
     		++currentRow;
