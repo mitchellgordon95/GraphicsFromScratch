@@ -8,6 +8,7 @@
 #include "tiffwrite_module.h"
 #include "echo_module.h"
 #include "resize_module.h"
+#include "zoom_module.h"
 #include <cstddef>
 #include <string.h>
 
@@ -24,6 +25,7 @@ Dispatcher::Dispatcher() : CLI_Module("", 0)
     _modules.push_back(new CLI_TiffRead());
     _modules.push_back(new CLI_TiffWrite());
     _modules.push_back(new CLI_Resize());
+    _modules.push_back(new CLI_Zoom());
 }
 
 Dispatcher::~Dispatcher()

@@ -11,6 +11,7 @@
 #include <vector>
 #include <GL/glut.h>
 #include "tiffstat_module.h"
+#include "cli_global.h"
 
 // Initialize the static map for the last metadata read
 std::map<uint16_t, IFD_Entry> CLI_TiffRead::lastRead;

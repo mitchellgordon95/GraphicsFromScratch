@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstddef>
 #include <GL/glut.h>
+#include "dispatcher_module.h"
 
 // Global access to things related to drawing.
 namespace CLI_Global {
@@ -20,7 +21,11 @@ namespace CLI_Global {
 		int height;
 	};
 
+	// The image that will be drawn on the screen
 	extern Image displayImage;
+
+	// The global dispatcher for the application.
+	extern Dispatcher dispatcher;
 
 	// Resize the image, clearing any pixels that have been set.
 	void resizeImage(int width, int height);

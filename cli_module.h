@@ -4,7 +4,6 @@
 #include <vector>
 #include <cstddef>
 #include <GL/glut.h>
-#include "cli_global.h"
 
 // The abstract interface class for all CLI modules
 class CLI_Module 

@@ -20,15 +20,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "dispatcher_module.h"
 #include "cli_global.h"
 
 static GLint height;
 
 using namespace CLI_Global;
-
-// The dispatcher for our CLI
-static Dispatcher dispatcher;
 
 void makeCheckImage(void) {
 	int i, j;

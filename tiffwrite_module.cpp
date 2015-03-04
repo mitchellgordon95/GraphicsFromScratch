@@ -10,6 +10,7 @@
 #include <GL/glut.h>
 #include "tiff_utils.h"
 #include "tiffread_module.h"
+#include "cli_global.h"
 
 CLI_TiffWrite::~CLI_TiffWrite()
 {

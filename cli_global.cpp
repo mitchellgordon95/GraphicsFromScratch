@@ -11,6 +11,9 @@ using namespace CLI_Global;
 // Allocate space in the object file for static members.
 Image CLI_Global::displayImage;
 
+// The global dispatcher
+Dispatcher CLI_Global::dispatcher;
+
 // Resizes the image on the screen, clearing the image.
 void CLI_Global::resizeImage(int width, int height) {
 
