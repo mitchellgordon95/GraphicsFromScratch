@@ -3,25 +3,86 @@
 #include <cmath>
 #include <iostream>
 
-// A gaussian function, centered at the origin
-float gaussianFilter(float x) {
-	return (1 / sqrt(2 * M_PI)) * exp(-pow(x, 2) / 2);
+Filter_Type globalFilterType = LANCZOS;
+int globalFilterRadius = 3;
+
+void setFilterType(Filter_Type type) {
+	globalFilterType = type;
 }
 
-float pointFilter(float x) {
+const char * getFilterName() {
+	return getFilterName(globalFilterType);
+}
+
+const char * getFilterName(Filter_Type type) {
+	switch (type) {
+	case LANCZOS:
+		return "Lanczos";
+	case GAUSSIAN:
+		return "Gaussian";
+	case BOX:
+		return "Box";
+	case TENT:
+		return "Tent";
+	default:
+		return "Unknown";
+	}
+}
+
+void setFilterRadius(int radius) {
+	globalFilterRadius = radius;
+}
+
+int getFilterRadius() {
+	return globalFilterRadius;
+}
+
+float lanczosFilter(float x, float radius) {
 	if (x == 0)
 		return 1;
+	else if (abs(x) < radius)
+		return radius * sin(M_PI * x) * sin((M_PI * x) / radius) / pow(M_PI, 2) / pow(x, 2);
+	else
+		return 0;
+}
+
+// A normal gaussian function, centered at the origin, with a standard deviation of 1 pixel.
+// Filter radius is not taken into account.
+float gaussianFilter(float x, float radius) {
+	return  exp(-pow(x, 2) / (2 * pow(radius, 2))) / sqrt(2 * M_PI * radius);
+}
+
+float boxFilter(float x, float radius) {
+	if (abs(x) < radius)
+		return 1 / (2 *radius);
+	else
+		return 0;
+}
+
+float tentFilter(float x, float radius) {
+	if (abs(x) < radius)
+		return (1 - abs(x / radius)) / radius;
 	else
 		return 0;
 }
 
 Filter_Func_Pointer makeFilter(Filter_Type type) {
+	if (type == LANCZOS)
+		return lanczosFilter;
 	if (type == GAUSSIAN)
 		return gaussianFilter;
-	else if (type == POINT)
-		return pointFilter;
+	else if (type == BOX)
+		return boxFilter;
+	else if (type == TENT)
+		return tentFilter;
 	else
 		throw std::runtime_error("Unknown filter type.");
+}
+
+GLubyte floatToGLubyte(float in) {
+	in = (in < 0) ? 0 : in;
+	in = (in > 255) ? 255 : in;
+	return (GLubyte) in;
 }
 
 Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) {
@@ -47,16 +108,30 @@ Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) 
 			lower = (lower >= 0) ? lower : 0;
 			upper = (upper <= in.width) ? upper : in.width;
 
-			Pixel output_pixel = { 0, 0, 0 };
+			float R = 0, G = 0, B = 0;
+			float norm = 0;
 
 			for (int k = lower; k < upper; ++k) {
-				float filter_val = filter(k - x);
+				float filter_val = filter(k - x, radius);
+				norm += filter_val;
 				Pixel * p = CLI_Global::getPixel(row, k, in);
 
-				output_pixel.R += (GLubyte) (p->R * filter_val);
-				output_pixel.G += (GLubyte) (p->G * filter_val);
-				output_pixel.B += (GLubyte) (p->B * filter_val);
+				R += (p->R * filter_val);
+				G += (p->G * filter_val);
+				B += (p->B * filter_val);
 			}
+
+			// Normalize the result
+			R /= norm;
+			G /= norm;
+			B /= norm;
+
+			Pixel output_pixel;
+
+			// Clamp to 0 - 255
+			output_pixel.R = floatToGLubyte(R);
+			output_pixel.G = floatToGLubyte(G);
+			output_pixel.B = floatToGLubyte(B);
 
 			// Assign the pixel to the output image.
 			CLI_Global::setPixel(row, col, output_pixel, out);
@@ -87,16 +162,30 @@ Image resampleY(Image in, int newHeight, Filter_Func_Pointer filter, int radius)
 			lower = (lower >= 0) ? lower : 0;
 			upper = (upper <= in.height) ? upper : in.height;
 
-			Pixel output_pixel = { 0, 0, 0 };
+			float R = 0, G = 0, B = 0;
+			float norm = 0;
 
 			for (int k = lower; k < upper; ++k) {
-				float filter_val = filter(k - x);
+				float filter_val = filter(k - x, radius);
+				norm += filter_val;
 				Pixel * p = CLI_Global::getPixel(k, col, in);
 
-				output_pixel.R += (GLubyte) (p->R * filter_val);
-				output_pixel.G += (GLubyte) (p->G * filter_val);
-				output_pixel.B += (GLubyte) (p->B * filter_val);
+				R += p->R * filter_val;
+				G += p->G * filter_val;
+				B += p->B * filter_val;
 			}
+
+			// Normalize the result
+			R /= norm;
+			G /= norm;
+			B /= norm;
+
+			Pixel output_pixel;
+
+			// Clamp to 0 - 255
+			output_pixel.R = floatToGLubyte(R);
+			output_pixel.G = floatToGLubyte(G);
+			output_pixel.B = floatToGLubyte(B);
 
 			// Assign the pixel to the output image.
 			CLI_Global::setPixel(row, col, output_pixel, out);
@@ -105,8 +194,11 @@ Image resampleY(Image in, int newHeight, Filter_Func_Pointer filter, int radius)
 	return out;
 }
 
-Image resample(Image in, int width, int height, Filter_Type filter_type,
-		int radius) {
+Image resample(Image in, int width, int height) {
+	return resample(in, width, height, globalFilterType, globalFilterRadius);
+}
+
+Image resample(Image in, int width, int height, Filter_Type filter_type, int radius) {
 	Filter_Func_Pointer filter = makeFilter(filter_type);
 
 	Image tmp = resampleX(in, width, filter, radius);

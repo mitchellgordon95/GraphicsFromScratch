@@ -9,7 +9,8 @@ class Dispatcher : public CLI_Module
 private:
     std::vector< CLI_Module * > _modules;
     
-    void execute (std::vector<char *> &params) {}
+    // Displays the help menu.
+    void execute (std::vector<char *> &params);
 
 public:
     Dispatcher(); 

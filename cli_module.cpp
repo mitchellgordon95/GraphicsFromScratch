@@ -11,10 +11,15 @@ bool CLI_Module::interpret(std::vector<char *> &command)
     if (command.size() == 0 || strncmp(command[0], keyword, strlen(keyword)) != 0)
         return false;
 
-    // Only check the param count if it's positive. Otherwise, the parameters are variable.
-    if (param_count >= 0 && command.size() - 1 != (size_t) param_count)
+    if (command.size() > 1 && strcmp(command[1], "help") == 0) {
+    	std::cout << getHelp() << std::endl;
+    	return true;
+    }
+
+    if ( command.size() - 1 < (size_t) param_count)
     {
-        std::cout << "Invalid argument count. Expected " << param_count << " params." << std::endl;
+        std::cout << "Invalid argument count. Expected at least " << param_count << " params." << std::endl;
+        std::cout << "Enter '" << keyword << " help' to display usage." << std::endl;
     }
     else
     {

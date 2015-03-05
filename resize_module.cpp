@@ -16,7 +16,7 @@ void CLI_Resize::execute(std::vector<char *> &params)
 	int newX = (int)(xScale * displayImage.width);
 	int newY = (int)(yScale * displayImage.height);
 
-	Image newImage = resample(displayImage, newX, newY, GAUSSIAN, 5);
+	Image newImage = resample(displayImage, newX, newY);
 
 	deleteImage(displayImage);
 	displayImage = newImage;
@@ -25,5 +25,7 @@ void CLI_Resize::execute(std::vector<char *> &params)
 	glutReshapeWindow(newX, newY);
 
 	std::cout << "Resizing the image to " << newX << "x" << newY << "." << std::endl;
-	std::cout << "Applying a 5px Gaussian filter for anti-aliasing" << std::endl;
+	std::cout << "Applying a " << getFilterRadius() << "px " << getFilterName()
+			<< " filter for anti-aliasing." << std::endl;
+	std::cout << "Use 'select' to change filter size and type." << std::endl;
 }

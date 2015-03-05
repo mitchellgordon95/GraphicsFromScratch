@@ -19,9 +19,8 @@ private:
     // The number of parameters this module expects
     int param_count;
 public:
-    // Constructor. Takes a keyword to associate the module with and the number
-    // of parameters the module expects. Modules with variable parameters should
-    // set param_count to -1.
+    // Constructor. Takes a keyword to associate the module with and minimal number
+    // of parameters the module expects.
     CLI_Module(const char * k, int p): keyword(k), param_count(p) {};
 
     // Virtual destructor
@@ -34,6 +33,12 @@ public:
 
     // A convenience function for parsing numerical arguments.
     static float parseNumericalArg(char * param);
+
+    // Gets the keyword this module is associated with
+    const char * getKeyword() { return keyword; }
+
+    // Returns the help documentation for this module.
+    virtual const char * getHelp() { return "No documentation available."; }
 };
 
 #endif

@@ -9,13 +9,15 @@
 #include "echo_module.h"
 #include "resize_module.h"
 #include "zoom_module.h"
+#include "select_module.h"
 #include <cstddef>
 #include <string.h>
 
 // Since we override interpret, we don't care about the keyword etc.
-Dispatcher::Dispatcher() : CLI_Module("", 0) 
+Dispatcher::Dispatcher() : CLI_Module("help", 0)
 {
     // Add all the modules we know about to a vector
+	_modules.push_back(this);
     _modules.push_back(new CLI_Move());    
     _modules.push_back(new CLI_Echo());
     _modules.push_back(new CLI_Draw());    
@@ -26,12 +28,19 @@ Dispatcher::Dispatcher() : CLI_Module("", 0)
     _modules.push_back(new CLI_TiffWrite());
     _modules.push_back(new CLI_Resize());
     _modules.push_back(new CLI_Zoom());
+    _modules.push_back(new CLI_Select());
 }
 
 Dispatcher::~Dispatcher()
 {
     for (size_t i = 0; i < _modules.size(); ++i)
         delete _modules[i];
+}
+
+void Dispatcher::execute(std::vector<char *> &params) {
+		std::cout << "Known commands: " << std::endl;
+		for (size_t i = 0 ; i < _modules.size() ; ++i)
+			std::cout << "\t" << _modules[i]->getKeyword() << std::endl;
 }
 
 bool Dispatcher::interpret(char * command) 

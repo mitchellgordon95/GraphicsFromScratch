@@ -181,7 +181,7 @@ void main_loop(char line[]) {
 	} else {
 		// Pass the command to the dispatcher.
 		if (!dispatcher.interpret(line))
-			printf("Command not found.\n");
+			printf("Command not found. Type 'help' to display commands.\n");
 	}
 
 	printf("CLI> ");
