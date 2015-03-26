@@ -1,5 +1,6 @@
 /**
- * Note: 99% of this code is Bobby B's.
+ * Note: 99% of this code is Bobby B's code from the 90's.
+ * TODO - Fix it.
  */
 
 #include <stdio.h>
@@ -12,16 +13,16 @@
 
 using namespace arma;
 
-std::stack<fmat> init_transform_stack() {
-	std::stack<fmat> stack;
+std::vector<fmat> init_transform_stack() {
+	std::vector<fmat> stack;
 	fmat ident = eye<fmat>(4,4);
-	stack.push(ident);
+	stack.push_back(ident);
 	return stack;
 }
 
 namespace CLI_Geometry {
 
-	std::stack<fmat> transform_stack = init_transform_stack();
+	std::vector<fmat> transform_stack = init_transform_stack();
 
     /* the clipping window */
     static float xmin = 0.0;
@@ -393,65 +394,6 @@ namespace CLI_Geometry {
     /*=================== End of lines.c =====================================*/
 
 
-    /*  Implement the following routines into your file */
-
-
-    #define ROW 4
-    #define COL 4
-
-
-    /* Definitions of the types of structures and variables used in the following
-       code.  Use these or implement your own. */
-
-    typedef struct                  /* structure definitions */
-    {
-       float  mat[ROW][COL];
-    }  matrix_unit;
-
-    typedef struct
-    {
-       float i;
-       float j;
-       float k;
-    } Vector;
-
-    typedef struct
-    {
-       float x;
-       float y;
-       float z;
-       float r;
-       float g;
-       float b;
-    } Vertex_unit;
-
-    typedef struct
-    {
-      float mat41[ROW];
-    } matrix41;
-
-    static float Near, Far;
-
-    float w;
-
-    int perspflag=0;
-
-    static matrix_unit I = {
-       { {1., 0., 0., 0.},
-         {0., 1., 0., 0.},
-         {0., 0., 1., 0.},
-         {0., 0., 0., 1.}  },
-    };
-
-    matrix_unit *stack[50];    /* array of pointers to act as a stack */
-
-    int top = 0;                   /* points to top of the stack */
-
-    int width, height;         /* height and width of frame buffer */
-
-    static matrix_unit orth;       /* global ortho and perspective matrices */
-                                   /* to be used in Vertex3f */
-    static matrix_unit perspect;
 
     /*========================================================================*/
     /* Finds a cross product of two vectors                                   */

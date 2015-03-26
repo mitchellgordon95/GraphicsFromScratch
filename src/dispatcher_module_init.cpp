@@ -16,6 +16,7 @@
 #include "rotate_module.h"
 #include "scale_module.h"
 #include "select_module.h"
+#include "stacktop_module.h"
 #include "tiffread_module.h"
 #include "tiffstat_module.h"
 #include "tiffwrite_module.h"
@@ -28,7 +29,6 @@ Dispatcher::Dispatcher() : CLI_Module("help", 0)
 {
     //Add all modules we know about to a vector for lookup
     _modules.push_back(this);
-    _modules.push_back(new CLI_Read(*this));
 
     _modules.push_back(new CLI_Color());
     _modules.push_back(new CLI_Draw());
@@ -39,11 +39,13 @@ Dispatcher::Dispatcher() : CLI_Module("help", 0)
     _modules.push_back(new CLI_Perspective());
     _modules.push_back(new CLI_Pop());
     _modules.push_back(new CLI_Push());
+    _modules.push_back(new CLI_Read());
     _modules.push_back(new CLI_Reset());
     _modules.push_back(new CLI_Resize());
     _modules.push_back(new CLI_Rotate());
     _modules.push_back(new CLI_Scale());
     _modules.push_back(new CLI_Select());
+    _modules.push_back(new CLI_Stacktop());
     _modules.push_back(new CLI_Tiffread());
     _modules.push_back(new CLI_Tiffstat());
     _modules.push_back(new CLI_Tiffwrite());

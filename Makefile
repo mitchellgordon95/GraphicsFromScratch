@@ -6,7 +6,7 @@ prefix = /usr/lib/i386-linux-gnu
 prefix = /usr/lib/x86_64-linux-gnu
 
 GLUT_LIBS = $(prefix)/libglut.so.3
-LDADD = $(GLUT_LIBS) $(prefix)/libGLU.so.1 $(prefix)/libGL.so.1  -lm -lstdc++
+LDADD = $(GLUT_LIBS) $(prefix)/libGLU.so.1 $(prefix)/libGL.so.1  -lm -lstdc++ -larmadillo
 
 CFLAGS = -g -O2 -Wall -fomit-frame-pointer -ffast-math -fexpensive-optimizations -D_REENTRANT
 CPPFLAGS = -std=c++11
