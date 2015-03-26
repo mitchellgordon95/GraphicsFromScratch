@@ -9,11 +9,11 @@
 #include <stdexcept>
 #include "endian_stream_reader.h"
 
-CLI_TiffStat::~CLI_TiffStat()
+CLI_Tiffstat::~CLI_Tiffstat()
 {
 }
 
-void CLI_TiffStat::execute(std::vector<char *> &params)
+void CLI_Tiffstat::execute(std::vector<char *> &params)
 {
     std::ifstream file(params[0], std::ios::binary);
     
@@ -28,7 +28,7 @@ void CLI_TiffStat::execute(std::vector<char *> &params)
     parseTiffMeta(file, true);    
 }
 
-std::map<uint16_t, IFD_Entry> CLI_TiffStat::parseTiffMeta(std::ifstream &file, bool verbose) {
+std::map<uint16_t, IFD_Entry> CLI_Tiffstat::parseTiffMeta(std::ifstream &file, bool verbose) {
 
     char endianess[3];
     file.read(endianess, 2);

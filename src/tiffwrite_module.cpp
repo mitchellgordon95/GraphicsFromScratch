@@ -12,11 +12,11 @@
 #include "tiffread_module.h"
 #include "cli_global.h"
 
-CLI_TiffWrite::~CLI_TiffWrite()
+CLI_Tiffwrite::~CLI_Tiffwrite()
 {
 }
 
-void CLI_TiffWrite::execute(std::vector<char *> &params)
+void CLI_Tiffwrite::execute(std::vector<char *> &params)
 {
     std::ofstream file(params[0], std::ios::binary);
     
@@ -24,7 +24,7 @@ void CLI_TiffWrite::execute(std::vector<char *> &params)
         throw std::invalid_argument(std::string("Could not open file for writing: ") + params[0]);
 
 
-    std::map<uint16_t, IFD_Entry> entries = CLI_TiffRead::getLastRead();
+    std::map<uint16_t, IFD_Entry> entries = CLI_Tiffread::getLastRead();
 
     if (entries.empty())
     	throw std::runtime_error("TiffRead has not been called yet.");
@@ -57,7 +57,7 @@ void CLI_TiffWrite::execute(std::vector<char *> &params)
 
     // Write the image data out into the file.
 
-    TiffColorScheme scheme = CLI_TiffRead::getColorScheme(entries);
+    TiffColorScheme scheme = CLI_Tiffread::getColorScheme(entries);
 
     int x0 = (int) parseNumericalArg(params[1]);
     int y0 = (int) parseNumericalArg(params[2]);

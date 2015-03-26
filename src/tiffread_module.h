@@ -8,7 +8,7 @@
 enum TiffColorScheme { RGB24bit = 0, GrayScale8bit = 1};
 
 // Implements the TiffRead command for the cli
-class CLI_TiffRead : public CLI_Module 
+class CLI_Tiffread : public CLI_Module 
 {
 private:
 	// The tags of the last tiff file read.
@@ -17,8 +17,8 @@ private:
 	// Reads in a Tiff file and displays it on the screen.
     void execute(std::vector<char *> &params);
 public:
-    CLI_TiffRead(): CLI_Module("tiffread", 1) {};
-    ~CLI_TiffRead();
+    CLI_Tiffread(): CLI_Module("tiffread", 1) {};
+    ~CLI_Tiffread();
 
     // Returns the metadata of the last tiff file read
     static std::map<uint16_t, IFD_Entry> getLastRead() {return lastRead;}

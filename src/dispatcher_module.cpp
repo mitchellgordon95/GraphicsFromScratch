@@ -1,35 +1,10 @@
 #include "dispatcher_module.h"
-#include "move_module.h"
-#include "draw_module.h"
-#include "color_module.h"
-#include "read_module.h"
-#include "tiffstat_module.h"
-#include "tiffread_module.h"
-#include "tiffwrite_module.h"
-#include "echo_module.h"
-#include "resize_module.h"
-#include "zoom_module.h"
-#include "select_module.h"
 #include <cstddef>
 #include <string.h>
+#include <iostream>
+#include <vector>
 
-// Since we override interpret, we don't care about the keyword etc.
-Dispatcher::Dispatcher() : CLI_Module("help", 0)
-{
-    // Add all the modules we know about to a vector
-	_modules.push_back(this);
-    _modules.push_back(new CLI_Move());    
-    _modules.push_back(new CLI_Echo());
-    _modules.push_back(new CLI_Draw());    
-    _modules.push_back(new CLI_Color());    
-    _modules.push_back(new CLI_Read(*this));
-    _modules.push_back(new CLI_TiffStat());
-    _modules.push_back(new CLI_TiffRead());
-    _modules.push_back(new CLI_TiffWrite());
-    _modules.push_back(new CLI_Resize());
-    _modules.push_back(new CLI_Zoom());
-    _modules.push_back(new CLI_Select());
-}
+// For the constructor definition, see dispatcher_module_init.cpp
 
 Dispatcher::~Dispatcher()
 {

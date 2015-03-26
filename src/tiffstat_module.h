@@ -8,14 +8,14 @@
 #include <map>
 
 // Implements the draw command for the cli
-class CLI_TiffStat : public CLI_Module 
+class CLI_Tiffstat : public CLI_Module 
 {
 private:
     // TiffStats the pen to a specified location in 3 dimensions
     void execute(std::vector<char *> &params);
 public:
-    CLI_TiffStat(): CLI_Module("tiffstat", 1) {};
-    ~CLI_TiffStat();
+    CLI_Tiffstat(): CLI_Module("tiffstat", 1) {};
+    ~CLI_Tiffstat();
 
     // Given a file, parse the TIFF IFD into structs
     // Can optionally be verbose and print metadata to console

@@ -14,13 +14,13 @@
 #include "cli_global.h"
 
 // Initialize the static map for the last metadata read
-std::map<uint16_t, IFD_Entry> CLI_TiffRead::lastRead;
+std::map<uint16_t, IFD_Entry> CLI_Tiffread::lastRead;
 
-CLI_TiffRead::~CLI_TiffRead()
+CLI_Tiffread::~CLI_Tiffread()
 {
 }
 
-void CLI_TiffRead::execute(std::vector<char *> &params)
+void CLI_Tiffread::execute(std::vector<char *> &params)
 {
     std::ifstream file(params[0], std::ios::binary);
     
@@ -29,7 +29,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
         throw std::invalid_argument(std::string("Could not read file ") + params[0]);
     }
 
-    std::map<uint16_t, IFD_Entry> entries = CLI_TiffStat::parseTiffMeta(file, false);
+    std::map<uint16_t, IFD_Entry> entries = CLI_Tiffstat::parseTiffMeta(file, false);
 
     // We don't support compression yet
     if (entries[259].getValue<uint16_t>(0) != 1)
@@ -98,7 +98,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     file.close();
 
     // Store the entries in case TiffWrite wants it later
-    CLI_TiffRead::lastRead = std::map<uint16_t, IFD_Entry>(entries);
+    CLI_Tiffread::lastRead = std::map<uint16_t, IFD_Entry>(entries);
 
     // Make the window refresh.
     glutPostRedisplay();
@@ -106,7 +106,7 @@ void CLI_TiffRead::execute(std::vector<char *> &params)
     std::cout << "Displaying TIFF file " << params[0] << " on screen." << std::endl;
 }
 
-TiffColorScheme CLI_TiffRead::getColorScheme (std::map<uint16_t, IFD_Entry> &entries) {
+TiffColorScheme CLI_Tiffread::getColorScheme (std::map<uint16_t, IFD_Entry> &entries) {
 
 	int photometric = entries[262].getValue<uint16_t>(0);
 
