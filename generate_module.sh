@@ -17,7 +17,7 @@ class CLI_${keyword^} : public CLI_Module
 private:
     void execute(std::vector<char *> &params);
 public:
-    CLI_${keyword^}(): CLI_Module(\"${keyword}\", 0) {};
+    CLI_${keyword^}(): CLI_Module(\"${keyword}\", $param_count) {};
     ~CLI_${keyword^}();
     virtual const char * getHelp() { return \"$help_docs\"; }
 };
