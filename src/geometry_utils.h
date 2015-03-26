@@ -2,6 +2,8 @@
 #define GEOMETRY_UTILS_H
 #include <armadillo>
 #include <stack>
+#define ROW 4
+#define COL 4
 
 // NOTE: 95% of this code is Bobby B's code from the 90's.
 // TODO - Fix it.
@@ -12,7 +14,6 @@ namespace CLI_Geometry {
 
 	extern std::vector<fmat> transform_stack;
 
-
 	void gtLookAt( float fx, float fy, float fz, float atx, float aty,
 			   float atz, float upx, float upy, float upz);
 	void gtVertex3f(float x, float y, float z);
@@ -20,9 +21,6 @@ namespace CLI_Geometry {
 	void draw_line(float, float, float, float);
 	int near_far_clip(float, float, float *, float *, float *, float *,
 					  float *, float *);
-
-	const int ROW = 4;
-	const int COL = 4;
 
     typedef struct                  /* structure definitions */
     {
@@ -51,28 +49,21 @@ namespace CLI_Geometry {
       float mat41[ROW];
     } matrix41;
 
-    static float Near, Far;
+    extern float Near, Far;
 
-    float w;
+    extern float w;
 
-    int perspflag=0;
+    extern int perspflag;
 
-    static matrix_unit I = {
-       { {1., 0., 0., 0.},
-         {0., 1., 0., 0.},
-         {0., 0., 1., 0.},
-         {0., 0., 0., 1.}  },
-    };
+    extern matrix_unit *stack[50];    /* array of pointers to act as a stack */
 
-    matrix_unit *stack[50];    /* array of pointers to act as a stack */
+    extern int top;                   /* points to top of the stack */
 
-    int top = 0;                   /* points to top of the stack */
+    extern int width, height;         /* height and width of frame buffer */
 
-    int width, height;         /* height and width of frame buffer */
-
-    static matrix_unit orth;       /* global ortho and perspective matrices */
+    extern matrix_unit orth;       /* global ortho and perspective matrices */
                                    /* to be used in Vertex3f */
-    static matrix_unit perspect;
+    extern matrix_unit perspect;
 
 }
 
