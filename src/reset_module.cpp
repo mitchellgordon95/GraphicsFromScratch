@@ -18,6 +18,8 @@ void CLI_Reset::execute(std::vector<char *> &params)
 
 	transform_stack.push_back(eye<fmat>(4, 4));
 
+	perspflag = 0;
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glRasterPos2i(0, 0);
 	glFlush();

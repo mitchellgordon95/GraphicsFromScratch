@@ -49,9 +49,9 @@ namespace CLI_Geometry {
       float mat41[ROW];
     } matrix41;
 
-    extern float Near, Far;
+    extern matrix_unit Identity;
 
-    extern float w;
+    extern float Near, Far;
 
     extern int perspflag;
 

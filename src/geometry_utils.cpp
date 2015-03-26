@@ -38,14 +38,13 @@ void update_matrix_unit_stack() {
 		arma_to_matrix_unit(transform_stack[i], *stack[i]);
 	}
 
+	top = transform_stack.size() - 1;
 }
 
-static matrix_unit I = { { { 1., 0., 0., 0. }, { 0., 1., 0., 0. }, { 0., 0., 1.,
+matrix_unit Identity = { { { 1., 0., 0., 0. }, { 0., 1., 0., 0. }, { 0., 0., 1.,
 		0. }, { 0., 0., 0., 1. } }, };
 
 float Near, Far;
-
-float w;
 
 int perspflag = 0;
 
@@ -495,7 +494,7 @@ void gtLookAt(float fx, float fy, float fz, float atx, float aty, float atz,
 	//int i, j;
 
 	/*   translation */
-	ltrans = I;
+	ltrans = Identity;
 	t = &ltrans;
 	t->mat[0][3] = -fx;
 	t->mat[1][3] = -fy;
@@ -513,7 +512,7 @@ void gtLookAt(float fx, float fy, float fz, float atx, float aty, float atz,
 	dz = atz - fz;
 	Unitvec(dx, dy, dz, &rz);
 
-	rfin = I;
+	rfin = Identity;
 	/* make rx */
 	Cross(&rz, &up, &rx);
 	Unitvec(rx.i, rx.j, rx.k, &slnv);
