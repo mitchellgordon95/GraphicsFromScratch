@@ -15,5 +15,5 @@ void CLI_Zoom::execute(std::vector<char *> &params)
 	newCommand.push_back(strdup("resize"));
 	newCommand.push_back(params[0]);
 	newCommand.push_back(params[0]);
-	dispatcher.interpret(newCommand);
+	Dispatcher::getInstance().interpret(newCommand);
 }

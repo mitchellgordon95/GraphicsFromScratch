@@ -9,12 +9,19 @@ class Dispatcher : public CLI_Module
 private:
     std::vector< CLI_Module * > _modules;
     
+    // The singleton instance of a dispatcher.
+    static Dispatcher dispatcher;
+
     // Displays the help menu.
     void execute (std::vector<char *> &params);
 
-public:
     Dispatcher(); 
     ~Dispatcher();
+
+public:
+    // Returns the singleton instance of the dispatcher.
+    static Dispatcher & getInstance();
+
     // Parses a string into tokens and converts the keyword to lower
     // case before passing command to modules
     bool interpret(char* command);

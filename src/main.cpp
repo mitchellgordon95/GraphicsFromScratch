@@ -180,7 +180,7 @@ void main_loop(char line[]) {
 		exit(0);
 	} else {
 		// Pass the command to the dispatcher.
-		if (!dispatcher.interpret(line))
+		if (!Dispatcher::getInstance().interpret(line))
 			printf("Command not found. Type 'help' to display commands.\n");
 	}
 

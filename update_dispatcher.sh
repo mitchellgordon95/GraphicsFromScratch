@@ -13,12 +13,11 @@ Dispatcher::Dispatcher() : CLI_Module(\"help\", 0)
 {
     //Add all modules we know about to a vector for lookup
     _modules.push_back(this);
-    _modules.push_back(new CLI_Read(*this));
 " >> dispatcher_module_init.cpp
 
 for i in ${headers[@]}
 do
-    if [ $i != "dispatcher_module.h" ] && [ $i != "read_module.h" ] && [ $i != "cli_module.h" ]
+    if [ $i != "dispatcher_module.h" ] && [ $i != "cli_module.h" ]
     then
         keyword=${i%%_module.h}
         echo "    _modules.push_back(new CLI_${keyword^}());" >> dispatcher_module_init.cpp

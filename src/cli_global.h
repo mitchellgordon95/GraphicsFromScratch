@@ -24,9 +24,6 @@ namespace CLI_Global {
 	// The image that will be drawn on the screen
 	extern Image displayImage;
 
-	// The global dispatcher for the application.
-	extern Dispatcher dispatcher;
-
 	// Resize the image, clearing any pixels that have been set.
 	void resizeImage(int width, int height);
 

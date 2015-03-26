@@ -6,6 +6,13 @@
 
 // For the constructor definition, see dispatcher_module_init.cpp
 
+// The singleton instance of this dispatcher
+Dispatcher Dispatcher::dispatcher;
+
+Dispatcher & Dispatcher::getInstance() {
+	return dispatcher;
+}
+
 Dispatcher::~Dispatcher()
 {
     for (size_t i = 0; i < _modules.size(); ++i)

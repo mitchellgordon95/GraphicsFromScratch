@@ -46,7 +46,7 @@ void CLI_Read::execute(std::vector<char *> &params)
             if (isComment)
                 continue;
 
-            dispatcher.interpret( next_line );
+            Dispatcher::getInstance().interpret( next_line );
         }
         
         std::cout << "End script " << params[0] << std::endl;

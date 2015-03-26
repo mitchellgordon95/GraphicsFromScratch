@@ -6,6 +6,8 @@ read param_count
 echo -n "Help Documentation:"
 read help_docs 
 
+echo "Generating .cpp and .h files..."
+
 echo "#ifndef ${keyword^^}_MODULE_H
 #define ${keyword^^}_MODULE_H
 
@@ -33,3 +35,6 @@ CLI_${keyword^}::~CLI_${keyword^}()
 void CLI_${keyword^}::execute(std::vector<char *> &params)
 {
 }" > src/${keyword}_module.cpp
+
+echo "Updating dispatcher..."
+./update_dispatcher.sh
