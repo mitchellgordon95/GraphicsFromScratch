@@ -1,8 +1,13 @@
 #include "lookat_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
+#include <armadillo>
+
 CLI_Lookat::~CLI_Lookat()
 {
 }
+
+using namespace arma;
+using namespace CLI_Projection;
 
 void CLI_Lookat::execute(std::vector<char *> &params)
 {
@@ -16,5 +21,8 @@ void CLI_Lookat::execute(std::vector<char *> &params)
 	float uy = CLI_Module::parseNumericalArg(params[7]);
 	float uz = CLI_Module::parseNumericalArg(params[8]);
 
-	CLI_Geometry::gtLookAt(fx, fy, fz, ax, ay, az, ux, uy, uz);
+	// NOTE: This algorithm is directly translated from Bobby B's work. Not sure how it works.
+
+
+
 }

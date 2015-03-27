@@ -9,6 +9,9 @@
 #include "ortho_module.h"
 #include "perspective_module.h"
 #include "pop_module.h"
+#include "printcamera_module.h"
+#include "printortho_module.h"
+#include "printperspect_module.h"
 #include "push_module.h"
 #include "read_module.h"
 #include "reset_module.h"
@@ -38,6 +41,9 @@ Dispatcher::Dispatcher() : CLI_Module("help", 0)
     _modules.push_back(new CLI_Ortho());
     _modules.push_back(new CLI_Perspective());
     _modules.push_back(new CLI_Pop());
+    _modules.push_back(new CLI_Printcamera());
+    _modules.push_back(new CLI_Printortho());
+    _modules.push_back(new CLI_Printperspect());
     _modules.push_back(new CLI_Push());
     _modules.push_back(new CLI_Read());
     _modules.push_back(new CLI_Reset());

@@ -1,12 +1,12 @@
 #include "translate_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
 #include <armadillo>
 
 CLI_Translate::~CLI_Translate()
 {
 }
 
-using namespace CLI_Geometry;
+using namespace CLI_Projection;
 using namespace arma;
 
 void CLI_Translate::execute(std::vector<char *> &params)

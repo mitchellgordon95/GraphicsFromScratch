@@ -1,12 +1,12 @@
 #include "scale_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
 #include <armadillo>
 
 CLI_Scale::~CLI_Scale()
 {
 }
 
-using namespace CLI_Geometry;
+using namespace CLI_Projection;
 
 void CLI_Scale::execute(std::vector<char *> &params)
 {

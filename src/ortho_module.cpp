@@ -1,12 +1,13 @@
 #include "ortho_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
 #include <iostream>
 
 CLI_Ortho::~CLI_Ortho()
 {
 }
 
-using namespace CLI_Geometry;
+using namespace CLI_Projection;
+using namespace arma;
 
 void CLI_Ortho::execute(std::vector<char *> &params)
 {
@@ -17,18 +18,17 @@ void CLI_Ortho::execute(std::vector<char *> &params)
 	float near = CLI_Module::parseNumericalArg(params[4]);
 	float far = CLI_Module::parseNumericalArg(params[5]);
 
-	// Bobby's code assumes near and far are negated
 	near = -near;
 	far = -far;
 
-	orth = Identity;
+	orth = eye<fmat>(4,4);
 
-	orth.mat[0][0] = 2 / (right - left);
-	orth.mat[1][1] = 2 / (top - bottom);
-	orth.mat[2][2] = 2 / (near - far);
-	orth.mat[0][3] = - (right + left) / (right - left);
-	orth.mat[1][3] = - (top + bottom) / (top - bottom);
-	orth.mat[2][3] = - (near + far) / (near - far);
+	orth(0,0) = 2 / (right - left);
+	orth(1,1) = 2 / (top - bottom);
+	orth(2,2) = 2 / (near - far);
+	orth(0,3) = - (right + left) / (right - left);
+	orth(1,3) = - (top + bottom) / (top - bottom);
+	orth(2,3) = - (near + far) / (near - far);
 
 	std::cout << "Updated orthographic project matrix: l=" << left;
 	std::cout << ",r=" << right << ",b=" << bottom << ",t=" << top;

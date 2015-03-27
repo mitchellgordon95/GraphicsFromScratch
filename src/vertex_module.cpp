@@ -1,10 +1,17 @@
 #include "vertex_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
+#include "cli_global.h"
 #include <iostream>
+#include <armadillo>
+#include <GL/glut.h>
 
 CLI_Vertex::~CLI_Vertex()
 {
 }
+
+using namespace arma;
+using namespace CLI_Projection;
+using namespace CLI_Global;
 
 void CLI_Vertex::execute(std::vector<char *> &params)
 {
@@ -12,7 +19,40 @@ void CLI_Vertex::execute(std::vector<char *> &params)
 	float y = CLI_Module::parseNumericalArg(params[1]);
 	float z = CLI_Module::parseNumericalArg(params[2]);
 
-	CLI_Geometry::gtVertex3f(x, y, z);
+	if (!have_first) {
+		first(0) = x;
+		first(1) = y;
+		first(2) = z;
+		first(3) = 1;
 
-	std::cout << "Vertex at x=" << x << ",y=" << y << ",z=" << z << std::endl;;
+		have_first = true;
+
+		std::cout << "First vertex at x=" << x << ",y=" << y << ",z=" << z << std::endl;
+	}
+	else {
+		second(0) = x;
+		second(1) = y;
+		second(2) = z;
+		second(3) = 1;
+
+		// Calculate the viewport transform
+		fmat viewport = eye<fmat>(4,4);
+		viewport(0,0) = (float) displayImage.width / 2;
+		viewport(1,1) = (float) displayImage.height / 2;
+		viewport(0,3) = ((float) displayImage.width + 1 )/ 2;
+		viewport(1,3) = ((float) displayImage.height + 1) / 2;
+
+		fvec trans_first = viewport * orth * perspect * camera * transform_stack.back() * first;
+		fvec trans_second = viewport * orth * perspect * camera * transform_stack.back() * second;
+
+		draw_line(trans_first.at(0), trans_first.at(1), trans_second.at(0), trans_second.at(1));
+
+		std::cout << "Drew line to x=" << x << ",y=" << y << ",z=" << z << std::endl;
+		std::cout << "(" << trans_second.at(0) << "," << trans_second.at(1) << "," << trans_second.at(2) << ") on screen" << std::endl;
+
+		glutPostRedisplay();
+
+		have_first = false;
+	}
+
 }

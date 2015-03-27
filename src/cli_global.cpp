@@ -28,6 +28,21 @@ void CLI_Global::resizeImage(int width, int height) {
 	glutReshapeWindow(width, height);
 }
 
+// Clears the image to black
+void CLI_Global::clearImage(Image img) {
+	Pixel black;
+	black.R = 0;
+	black.G = 0;
+	black.B = 0;
+	for (int i = 0; i < img.width; ++i)
+		for (int j = 0; j < img.height; ++j)
+			setPixel(i, j, black, img);
+}
+
+void CLI_Global::clearImage() {
+	clearImage(displayImage);
+}
+
 // Allocates an image and its buffer.
 Image CLI_Global::createImage(int width, int height) {
 	Image out;

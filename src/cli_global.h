@@ -27,6 +27,10 @@ namespace CLI_Global {
 	// Resize the image, clearing any pixels that have been set.
 	void resizeImage(int width, int height);
 
+	// Clears the image to black
+	void clearImage();
+	void clearImage(Image image);
+
 	// Allocates a new image in memory.
 	Image createImage(int width, int height);
 

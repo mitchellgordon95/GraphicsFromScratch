@@ -1,11 +1,11 @@
 #include "pop_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
 
 CLI_Pop::~CLI_Pop()
 {
 }
 
-using namespace CLI_Geometry;
+using namespace CLI_Projection;
 
 void CLI_Pop::execute(std::vector<char *> &params)
 {

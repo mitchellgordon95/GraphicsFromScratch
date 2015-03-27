@@ -1,5 +1,5 @@
 #include "rotate_module.h"
-#include "geometry_utils.h"
+#include "projection_global.h"
 #include <armadillo>
 
 CLI_Rotate::~CLI_Rotate()
@@ -7,7 +7,7 @@ CLI_Rotate::~CLI_Rotate()
 }
 
 using namespace arma;
-using namespace CLI_Geometry;
+using namespace CLI_Projection;
 
 void CLI_Rotate::execute(std::vector<char *> &params)
 {
