@@ -11,7 +11,7 @@ private:
 public:
     CLI_Lookat(): CLI_Module("lookat", 9) {};
     ~CLI_Lookat();
-    virtual const char * getHelp() { return "lookat fx,fy,fz,ax,ay,az,ux,uy,uz: changes the point of view."; }
+    virtual const char * getHelp() { return "lookat fx,fy,fz,ax,ay,az,ux,uy,uz: changes the point of view. Looks from point f, at point a, with the up direction given by vector u."; }
 };
 
 #endif

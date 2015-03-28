@@ -6,6 +6,7 @@
 #include "echo_module.h"
 #include "lookat_module.h"
 #include "move_module.h"
+#include "orient_module.h"
 #include "ortho_module.h"
 #include "perspective_module.h"
 #include "pop_module.h"
@@ -38,6 +39,7 @@ Dispatcher::Dispatcher() : CLI_Module("help", 0)
     _modules.push_back(new CLI_Echo());
     _modules.push_back(new CLI_Lookat());
     _modules.push_back(new CLI_Move());
+    _modules.push_back(new CLI_Orient());
     _modules.push_back(new CLI_Ortho());
     _modules.push_back(new CLI_Perspective());
     _modules.push_back(new CLI_Pop());

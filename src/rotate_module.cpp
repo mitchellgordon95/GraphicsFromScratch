@@ -29,11 +29,11 @@ void CLI_Rotate::execute(std::vector<char *> &params)
 	int least = (w(0) < w(1)) ? 0 : 1;
 	least = (w(least) < w(2)) ? least : 2;
 
-	fmat t = w;
+	frowvec t = w;
 	t(least) = 1;
 
-	fmat u = cross(w, t) / norm(cross(w, t), 2);
-	fmat v = cross(w, u);
+	frowvec u = cross(w, t) / norm(cross(w, t), 2);
+	frowvec v = cross(w, u);
 
 	// Converts points with xyz basis to uvw basis
 	fmat xyz_to_uvw = zeros<fmat>(3, 3);
@@ -46,8 +46,8 @@ void CLI_Rotate::execute(std::vector<char *> &params)
 	float radians = theta * 2 * M_PI / 360;
 	rotate(0, 0) = cos(radians);
 	rotate(0, 1) = -sin(radians);
-	rotate(1, 1) = sin(radians);
-	rotate(1, 2) = cos(radians);
+	rotate(1, 0) = sin(radians);
+	rotate(1, 1) = cos(radians);
 
 	fmat rotate_about_w = xyz_to_uvw.t() * rotate * xyz_to_uvw;
 
