@@ -9,6 +9,9 @@
 // Global access to things related to drawing.
 namespace CLI_Global {
 
+	// Determines whether modules should print diagnostics
+	extern bool diagnostics;
+
 	struct Pixel {
 		GLubyte R;
 		GLubyte G;

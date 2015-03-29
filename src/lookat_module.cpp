@@ -1,5 +1,6 @@
 #include "lookat_module.h"
 #include "projection_global.h"
+#include "cli_global.h"
 #include <armadillo>
 
 CLI_Lookat::~CLI_Lookat()
@@ -8,6 +9,7 @@ CLI_Lookat::~CLI_Lookat()
 
 using namespace arma;
 using namespace CLI_Projection;
+using namespace CLI_Global;
 
 void CLI_Lookat::execute(std::vector<char *> &params)
 {
@@ -53,4 +55,9 @@ void CLI_Lookat::execute(std::vector<char *> &params)
 	// The camera transform is simply a translate followed by a rotate.
 	camera = rotate * translate;
 
+	if (diagnostics) {
+		std::cout << "Translate matrix" << std::endl << translate << std::endl;
+		std::cout << "Rotate matrix" << std::endl << rotate << std::endl;
+		std::cout << "Camera matrix (rotate * translate)" << std::endl << camera << std::endl;
+	}
 }

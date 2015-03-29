@@ -8,6 +8,9 @@
 
 using namespace CLI_Global;
 
+// Determines whether modules should print diagnostics
+bool CLI_Global::diagnostics = false;
+
 // Allocate space in the object file for static members.
 Image CLI_Global::displayImage;
 

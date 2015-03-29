@@ -30,6 +30,26 @@ fmat perspect = eye<fmat>(4, 4);
 
 fmat camera = eye<fmat>(4, 4);
 
+void updateOrth(float left, float right, float bottom, float top, float near,
+		float far) {
+
+	orth = eye<fmat>(4,4);
+
+	orth(0,0) = 2 / (right - left);
+	orth(1,1) = 2 / (top - bottom);
+	orth(2,2) = 2 / (near - far);
+	orth(0,3) = - (right + left) / (right - left);
+	orth(1,3) = - (top + bottom) / (top - bottom);
+	orth(2,3) = - (near + far) / (near - far);
+
+	if (diagnostics) {
+        std::cout << "Updated orthographic project matrix: l=" << left;
+        std::cout << ",r=" << right << ",b=" << bottom << ",t=" << top;
+        std::cout << ",n=" << near << ",f=" << far << std::endl;
+		std::cout << "Orthographic matrix: " << std::endl << orth << std::endl;
+	}
+}
+
 /* the clipping window */
 static float xmin = 0.0;
 static float xmax = 1.0;
