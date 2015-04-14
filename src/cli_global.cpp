@@ -37,8 +37,8 @@ void CLI_Global::clearImage(Image img) {
 	black.R = 0;
 	black.G = 0;
 	black.B = 0;
-	for (int i = 0; i < img.width; ++i)
-		for (int j = 0; j < img.height; ++j)
+	for (int i = 0; i < img.height; ++i)
+		for (int j = 0; j < img.width; ++j)
 			setPixel(i, j, black, img);
 }
 
