@@ -76,7 +76,7 @@ void draw_line(float x0, float y0, float x1, float y1) {
 	float length = 0.;
 	int result;
 	int width, height;
-	Pixel white = { 255, 255, 255 };
+	Pixel white = { 1, 1, 1 };
 
 	/* set the clipping window */
 

@@ -16,6 +16,8 @@ CLI_Tiffwrite::~CLI_Tiffwrite()
 {
 }
 
+using namespace CLI_Global;
+
 void CLI_Tiffwrite::execute(std::vector<char *> &params)
 {
     std::ofstream file(params[0], std::ios::binary);
@@ -69,26 +71,40 @@ void CLI_Tiffwrite::execute(std::vector<char *> &params)
 
     uint32_t rowByteSize;
     if (scheme == GrayScale8bit)
-    	rowByteSize = newWidth * 1;
+    	rowByteSize = newWidth;
     else
     	rowByteSize = newWidth * 3;
 
     uint32_t imageByteSize = rowByteSize * newLength;
 
+    unsigned char * buffer = new unsigned char[rowByteSize];
+
     // Write out the image data
 	for (size_t i = 0; i < newLength; ++i) {
 		// If it's already in 24 bit RGB, then we don't have to do any color converting.
 		if (scheme == RGB24bit) {
+			// Convert from float to 0-255
+			for (size_t col = 0; col < newWidth; ++col) {
+				Pixel p = *CLI_Global::getPixel(y1 - i, col);
+				int pos = col * 3;
+				buffer[pos] = (unsigned char)(p.R * 255);
+				buffer[pos + 1] = (unsigned char)(p.G * 255);
+				buffer[pos + 2] = (unsigned char)(p.B * 255);
+			}
 			// We have to flip the image, because TIFF is top to bottom, but OpenGL is bottom to top.
-			file.write((char*) CLI_Global::getPixel(y1 - i, 0), rowByteSize);
+			file.write((char*) buffer, rowByteSize);
 		}
 		else if (scheme == GrayScale8bit) {
 			// Since we're rendering in 24bit RGB, we'll have to take a single value
 			// from each pixel.
-			for (size_t k = 0; k < newWidth; ++k)
-				file.write((char*)CLI_Global::getPixel(y1 - i, k), 1);
+			for (size_t k = 0; k < newWidth; ++k) {
+				buffer[k] = (unsigned char) (CLI_Global::getPixel(y1 - i, k)->R * 255);
+			}
+			file.write((char*)buffer, rowByteSize);
 		}
 	}
+
+	delete buffer;
 
 	// Make the tags right.
 

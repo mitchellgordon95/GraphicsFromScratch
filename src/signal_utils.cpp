@@ -79,10 +79,11 @@ Filter_Func_Pointer makeFilter(Filter_Type type) {
 		throw std::runtime_error("Unknown filter type.");
 }
 
-GLubyte floatToGLubyte(float in) {
+// Clamps floats to range 0 to 1
+float clamp(float in) {
 	in = (in < 0) ? 0 : in;
-	in = (in > 255) ? 255 : in;
-	return (GLubyte) in;
+	in = (in > 1) ? 1 : in;
+	return in;
 }
 
 Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) {
@@ -128,10 +129,10 @@ Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) 
 
 			Pixel output_pixel;
 
-			// Clamp to 0 - 255
-			output_pixel.R = floatToGLubyte(R);
-			output_pixel.G = floatToGLubyte(G);
-			output_pixel.B = floatToGLubyte(B);
+			// Clamp to [0, 1]
+			output_pixel.R = clamp(R);
+			output_pixel.G = clamp(G);
+			output_pixel.B = clamp(B);
 
 			// Assign the pixel to the output image.
 			CLI_Global::setPixel(row, col, output_pixel, out);
@@ -182,10 +183,10 @@ Image resampleY(Image in, int newHeight, Filter_Func_Pointer filter, int radius)
 
 			Pixel output_pixel;
 
-			// Clamp to 0 - 255
-			output_pixel.R = floatToGLubyte(R);
-			output_pixel.G = floatToGLubyte(G);
-			output_pixel.B = floatToGLubyte(B);
+			// Clamp to [0, 1]
+			output_pixel.R = clamp(R);
+			output_pixel.G = clamp(G);
+			output_pixel.B = clamp(B);
 
 			// Assign the pixel to the output image.
 			CLI_Global::setPixel(row, col, output_pixel, out);

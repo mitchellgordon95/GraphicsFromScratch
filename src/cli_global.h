@@ -12,10 +12,11 @@ namespace CLI_Global {
 	// Determines whether modules should print diagnostics
 	extern bool diagnostics;
 
+	// A pixel. Valid values between 0 and 1.
 	struct Pixel {
-		GLubyte R;
-		GLubyte G;
-		GLubyte B;
+		GLfloat R;
+		GLfloat G;
+		GLfloat B;
 	};
 
 	struct Image {

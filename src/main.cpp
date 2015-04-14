@@ -28,11 +28,11 @@ using namespace CLI_Global;
 
 void makeCheckImage(void) {
 	int i, j;
-	GLubyte c;
+	float c;
 
 	for (i = 0; i < displayImage.height; i++) {
 		for (j = 0; j < displayImage.width; j++) {
-			c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;
+			c = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 1;
 			setPixel(i, j, {c, c, c});
 		}
 	}
@@ -66,7 +66,7 @@ void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glRasterPos2i(0, 0);
 	glDrawPixels(displayImage.width, displayImage.height, GL_RGB,
-			GL_UNSIGNED_BYTE, displayImage.buffer);
+			GL_FLOAT, displayImage.buffer);
 	glFlush();
 }
 

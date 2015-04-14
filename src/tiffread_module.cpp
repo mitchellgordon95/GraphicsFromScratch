@@ -58,9 +58,12 @@ void CLI_Tiffread::execute(std::vector<char *> &params)
 
     // Read all the strips into memory.
 
-    char * buffer = 0;
+    unsigned char * buffer = 0;
     if (scheme == GrayScale8bit)
-    	buffer = new char[imageWidth];
+    	buffer = new unsigned char[imageWidth];
+    else
+    	// 24bitRGB
+    	buffer = new unsigned char[imageWidth * 3];
 
 	int photometric = entries[262].getValue<uint16_t>(0);
 
@@ -72,19 +75,26 @@ void CLI_Tiffread::execute(std::vector<char *> &params)
     	for (size_t stripRow = 0; stripRow < rowsPerStrip && currentRow < imageHeight; ++stripRow) {
     		// If it's already in 24 bit RGB, then we don't have to do any converting.
     		if (scheme == RGB24bit) {
-    			// We have to flip the image, because TIFF is top to bottom, but OpenGL is bottom to top.
-    			file.read((char*) CLI_Global::getPixel(imageHeight - currentRow - 1, 0), imageWidth * 3);
+    			file.read((char*) buffer, imageWidth * 3);
+    			for (size_t i = 0; i < imageWidth; ++i) {
+    				int bufferPos = i * 3;
+    				// We have to flip the image, because TIFF is top to bottom, but OpenGL is bottom to top
+    				CLI_Global::setPixel(imageHeight - currentRow - 1, i, { (GLfloat)buffer[bufferPos] / 255,
+    						(GLfloat)buffer[bufferPos + 1] / 255, (GLfloat)buffer[bufferPos+2] / 255});
+    			}
     		}
     		else if (scheme == GrayScale8bit) {
     			// Since we're rendering in 24bit RGB, we'll have to spread the grayscale
     			// values out.
-    			file.read(buffer, imageWidth);
+    			file.read((char *)buffer, imageWidth);
     			for (size_t col = 0; col < imageWidth; ++col) {
-    				GLubyte val = (GLubyte) buffer[col];
+    				GLfloat val = (GLfloat) buffer[col];
+    				// Normalize to 0 to 1 range
+    				val = val / 255;
 
 					// If 0 is white we have to flip the values.
 					if (photometric == 0)
-						val = 0xff - val;
+						val = 1 - val;
 
 					CLI_Global::setPixel(imageHeight - currentRow - 1, col, {val, val, val});
     			}
