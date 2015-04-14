@@ -1,4 +1,4 @@
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include "cli_global.h"
 #include <stdio.h>
 #include <math.h>
@@ -18,7 +18,7 @@ std::vector<fmat> init_transform_stack() {
 	return stack;
 }
 
-namespace CLI_Projection {
+namespace CLI_Pipeline {
 
 std::vector<fmat> transform_stack = init_transform_stack();
 

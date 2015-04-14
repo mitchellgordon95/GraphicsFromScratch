@@ -1,12 +1,12 @@
 #include "scale_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include <armadillo>
 
 CLI_Scale::~CLI_Scale()
 {
 }
 
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 
 void CLI_Scale::execute(std::vector<char *> &params)
 {

@@ -1,11 +1,11 @@
 #include "push_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 
 CLI_Push::~CLI_Push()
 {
 }
 
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 
 void CLI_Push::execute(std::vector<char *> &params)
 {

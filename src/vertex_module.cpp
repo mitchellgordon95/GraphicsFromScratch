@@ -1,5 +1,5 @@
 #include "vertex_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include "cli_global.h"
 #include <iostream>
 #include <armadillo>
@@ -10,7 +10,7 @@ CLI_Vertex::~CLI_Vertex()
 }
 
 using namespace arma;
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 using namespace CLI_Global;
 
 void CLI_Vertex::execute(std::vector<char *> &params)

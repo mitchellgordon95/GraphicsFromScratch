@@ -1,11 +1,11 @@
 #include "pop_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 
 CLI_Pop::~CLI_Pop()
 {
 }
 
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 
 void CLI_Pop::execute(std::vector<char *> &params)
 {

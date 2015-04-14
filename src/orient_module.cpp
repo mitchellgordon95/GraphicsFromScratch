@@ -1,12 +1,12 @@
 #include "orient_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include <armadillo>
 
 CLI_Orient::~CLI_Orient()
 {
 }
 
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 using namespace arma;
 
 void CLI_Orient::execute(std::vector<char *> &params)

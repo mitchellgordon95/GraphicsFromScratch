@@ -1,5 +1,5 @@
 #include "reset_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include "cli_global.h"
 #include <armadillo>
 
@@ -7,7 +7,7 @@ CLI_Reset::~CLI_Reset()
 {
 }
 
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 using namespace CLI_Global;
 using namespace arma;
 

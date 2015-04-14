@@ -1,12 +1,12 @@
 #include "translate_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include <armadillo>
 
 CLI_Translate::~CLI_Translate()
 {
 }
 
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 using namespace arma;
 
 void CLI_Translate::execute(std::vector<char *> &params)

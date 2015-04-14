@@ -1,5 +1,5 @@
 #include "lookat_module.h"
-#include "projection_global.h"
+#include "cli_pipeline.h"
 #include "cli_global.h"
 #include <armadillo>
 
@@ -8,7 +8,7 @@ CLI_Lookat::~CLI_Lookat()
 }
 
 using namespace arma;
-using namespace CLI_Projection;
+using namespace CLI_Pipeline;
 using namespace CLI_Global;
 
 void CLI_Lookat::execute(std::vector<char *> &params)

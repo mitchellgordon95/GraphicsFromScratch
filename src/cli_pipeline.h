@@ -5,7 +5,7 @@
 
 using namespace arma;
 
-namespace CLI_Projection {
+namespace CLI_Pipeline {
 
 extern std::vector<fmat> transform_stack;
 
