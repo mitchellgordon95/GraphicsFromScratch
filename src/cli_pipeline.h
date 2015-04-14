@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_UTILS_H
-#define GEOMETRY_UTILS_H
+#ifndef CLI_PIPELINE_H
+#define CLI_PIPELINE_H
 #include <armadillo>
 #include <stack>
 
