@@ -18,6 +18,8 @@ namespace CLI_Global {
 		GLfloat G;
 		GLfloat B;
 	};
+	inline Pixel operator+(Pixel left, Pixel right);
+	inline Pixel operator-(Pixel left, Pixel right);
 	inline Pixel operator*(Pixel left, Pixel right);
 	inline Pixel operator/(Pixel left, Pixel right);
 	inline bool isZero(Pixel p);
