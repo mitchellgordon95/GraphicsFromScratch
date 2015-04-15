@@ -1,6 +1,154 @@
 #include "cli_raytrace.h"
+#include "cli_global.h"
+
+using namespace CLI_Global;
 
 namespace CLI_Raytrace {
+
+	Pixel shade(fvec point, fvec dir) {
+		static int recurse_depth = 0;
+
+		if (recurse_depth > 3)
+			return {0, 0, 0};
+
+		// Find the closest object that the ray intersects
+		HitRecord closest;
+		closest.hit = false;
+		for (size_t i = 0; i < surfaces.size(); ++i) {
+			HitRecord next = surfaces[i]->intersects(point, dir);
+			if (next.hit && (!closest.hit || next.t < closest.t))
+				closest = next;
+		}
+
+		if (!closest.hit)
+			return background;
+
+		Pixel total = closest.surface->getAmbientColor();
+
+		// Calculate the reflective lighting component
+		// TODO - Add phong lighting
+		Pixel reflect = closest.surface->getReflectiveColor();
+		if (!isZero(reflect)) {
+			for (size_t i = 0; i < lights.size(); ++i) {
+				// Since the lights are all at infinity, to get the ray from the
+				// point of intersection to the light, just reverse the direction
+				// of the light.
+				fvec l = -lights[i].direction;
+
+				// The cosine of the angle between the light and the normal
+				float cos_theta = dot(l, closest.normal);
+				cos_theta = (cos_theta < 0) ? 0 : cos_theta;
+
+				total = total + (reflect * lights[i].color * cos_theta);
+			}
+		}
+
+		// Calculate the specular component
+		Pixel spec = closest.surface->getSpecularColor();
+		if (!isZero(spec)) {
+			fvec reflection = dir - 2 * (dot (dir, closest.normal)) * closest.normal;
+			reflection = norm(reflection, 2);
+
+			// Calculate the specular reflection from the point of contact.
+			total = total + (spec * shade(eye + closest.t * dir, reflection));
+		}
+
+		clamp(total);
+
+		return total;
+	}
+
+
+	Box::Box(fvec lower_left_back, fvec upper_right_top, Pixel amb, Pixel ref, Pixel spec): Surface(amb, ref, spec),
+			llb(lower_left_back), urt(upper_right_top){
+
+		if (llb(0) > urt(0) || llb(1) > urt(1) || llb(2) > urt(2))
+			throw std::runtime_error("The lower-left-bottom corner must be less than the upper-right-top corner");
+
+	}
+
+	HitRecord Box::intersects(fvec point, fvec dir) {
+		HitRecord record;
+		record.hit = false;
+		fvec normal = zeros<fvec>(3);
+		float tmin, tmax, txmin, txmax, tymin, tymax, tzmin, tzmax;
+
+		txmin = (llb(0) - point(0)) / dir(0);
+		txmax = (urt(0) - point(0)) / dir(0);
+
+		normal(0) = -1;
+
+		if (dir(0) < 0) {
+			std::swap(txmin, txmax);
+			normal(0) = 1;
+		}
+
+		tmin = txmin;
+		tmax = txmax;
+
+		tymin = (llb(1) - point(1)) / dir(1);
+		tymax = (urt(1) - point(1)) / dir(1);
+
+		if (dir(1) < 0)
+			std::swap(tymin, tymax);
+
+		// No intersection.
+		if (tymin > tmax || tymax < tmin)
+			return record;
+
+		if (tymin > tmin) {
+			tmin = tymin;
+
+			normal(0) = 0;
+
+			// If we bounced off the upper y plane
+			if (dir(1) < 0) {
+				normal(1) = -1;
+			}
+			else {
+				normal(1) = 1;
+			}
+		}
+		if (tymax < tmax)
+			tmax = tymax;
+
+		tzmin = (llb(2) - point(2)) / dir(2);
+		tzmax = (urt(2) - point(2)) / dir(2);
+
+		if (dir(2) < 0)
+			std::swap(tzmin, tzmax);
+
+		// No intersection.
+		if (tzmin > tmax || tzmax < tmin)
+			return record;
+
+		if (tzmin > tmin) {
+			tmin = tzmin;
+
+			normal(0) = 0;
+			normal(1) = 0;
+
+			// If we bounced off the upper z plane
+			if (dir(2) < 0) {
+				normal(2) = -1;
+			}
+			else {
+				normal(2) = 1;
+			}
+		}
+		if (tzmax < tmax)
+			tmax = tzmax;
+
+		// The ray intersects the box.
+		record.hit = true;
+		record.t = tmin;
+		record.surface = this;
+		record.normal = normal;
+
+		return record;
+
+	}
+
 
 	// The color of the background
 	Pixel background = {0, 0, 0};
@@ -22,7 +170,7 @@ namespace CLI_Raytrace {
 	fvec screen_bot_left;
 	fvec screen_bot_right;
 
-	std::vector<Surface> surfaces;
+	std::vector<Surface *> surfaces;
 
 	std::vector<InfinityLight> lights;
 
