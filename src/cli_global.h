@@ -18,11 +18,16 @@ namespace CLI_Global {
 		GLfloat G;
 		GLfloat B;
 	};
-	inline Pixel operator+(Pixel left, Pixel right);
-	inline Pixel operator-(Pixel left, Pixel right);
-	inline Pixel operator*(Pixel left, Pixel right);
-	inline Pixel operator/(Pixel left, Pixel right);
-	inline bool isZero(Pixel p);
+	Pixel operator+(Pixel left, Pixel right);
+	Pixel operator-(Pixel left, Pixel right);
+	Pixel operator*(Pixel left, Pixel right);
+	Pixel operator/(Pixel left, Pixel right);
+	Pixel operator*(Pixel p, float scale);
+	Pixel operator/(Pixel p, float scale);
+	Pixel operator*(float scale, Pixel p);
+	GLfloat clamp(GLfloat);
+	void clamp(Pixel& p);
+	bool isZero(Pixel p);
 
 	struct Image {
 		Pixel * buffer;

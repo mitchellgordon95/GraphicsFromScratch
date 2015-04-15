@@ -1,7 +1,10 @@
 #include "signal_utils.h"
+#include "cli_global.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
+
+using namespace CLI_Global;
 
 Filter_Type globalFilterType = LANCZOS;
 int globalFilterRadius = 3;
@@ -79,13 +82,6 @@ Filter_Func_Pointer makeFilter(Filter_Type type) {
 		throw std::runtime_error("Unknown filter type.");
 }
 
-// Clamps floats to range 0 to 1
-float clamp(float in) {
-	in = (in < 0) ? 0 : in;
-	in = (in > 1) ? 1 : in;
-	return in;
-}
-
 Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) {
 
 	Image out = CLI_Global::createImage(newWidth, in.height);
@@ -109,7 +105,7 @@ Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) 
 			lower = (lower >= 0) ? lower : 0;
 			upper = (upper <= in.width) ? upper : in.width;
 
-			float R = 0, G = 0, B = 0;
+			Pixel output_pixel = {0, 0, 0};
 			float norm = 0;
 
 			for (int k = lower; k < upper; ++k) {
@@ -117,22 +113,14 @@ Image resampleX(Image in, int newWidth, Filter_Func_Pointer filter, int radius) 
 				norm += filter_val;
 				Pixel * p = CLI_Global::getPixel(row, k, in);
 
-				R += (p->R * filter_val);
-				G += (p->G * filter_val);
-				B += (p->B * filter_val);
+				output_pixel = output_pixel + (*p * filter_val);
 			}
 
 			// Normalize the result
-			R /= norm;
-			G /= norm;
-			B /= norm;
-
-			Pixel output_pixel;
+			output_pixel = output_pixel / norm;
 
 			// Clamp to [0, 1]
-			output_pixel.R = clamp(R);
-			output_pixel.G = clamp(G);
-			output_pixel.B = clamp(B);
+			clamp(output_pixel);
 
 			// Assign the pixel to the output image.
 			CLI_Global::setPixel(row, col, output_pixel, out);
@@ -163,7 +151,7 @@ Image resampleY(Image in, int newHeight, Filter_Func_Pointer filter, int radius)
 			lower = (lower >= 0) ? lower : 0;
 			upper = (upper <= in.height) ? upper : in.height;
 
-			float R = 0, G = 0, B = 0;
+			Pixel output_pixel = {0,0,0};
 			float norm = 0;
 
 			for (int k = lower; k < upper; ++k) {
@@ -171,22 +159,15 @@ Image resampleY(Image in, int newHeight, Filter_Func_Pointer filter, int radius)
 				norm += filter_val;
 				Pixel * p = CLI_Global::getPixel(k, col, in);
 
-				R += p->R * filter_val;
-				G += p->G * filter_val;
-				B += p->B * filter_val;
+				output_pixel = output_pixel + (*p * filter_val);
 			}
 
 			// Normalize the result
-			R /= norm;
-			G /= norm;
-			B /= norm;
+			output_pixel = output_pixel / norm;
 
-			Pixel output_pixel;
 
 			// Clamp to [0, 1]
-			output_pixel.R = clamp(R);
-			output_pixel.G = clamp(G);
-			output_pixel.B = clamp(B);
+			clamp(output_pixel);
 
 			// Assign the pixel to the output image.
 			CLI_Global::setPixel(row, col, output_pixel, out);

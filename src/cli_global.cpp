@@ -14,35 +14,60 @@ bool CLI_Global::diagnostics = false;
 // Allocate space in the object file for static members.
 Image CLI_Global::displayImage;
 
-inline Pixel operator+(Pixel left, Pixel right) {
+Pixel CLI_Global::operator+(Pixel left, Pixel right) {
 	Pixel out;
 	out.R = left.R + right.R;
 	out.G = left.G + right.G;
 	out.B = left.B + right.B;
 	return out;
 }
-inline Pixel operator-(Pixel left, Pixel right) {
+Pixel CLI_Global::operator-(Pixel left, Pixel right) {
 	Pixel out;
 	out.R = left.R - right.R;
 	out.G = left.G - right.G;
 	out.B = left.B - right.B;
 	return out;
 }
-inline Pixel operator*(Pixel left, Pixel right) {
+Pixel CLI_Global::operator*(Pixel left, Pixel right) {
 	Pixel out;
 	out.R = left.R * right.R;
 	out.G = left.G * right.G;
 	out.B = left.B * right.B;
 	return out;
 }
-inline Pixel operator/(Pixel left, Pixel right) {
+Pixel CLI_Global::operator/(Pixel left, Pixel right) {
 	Pixel out;
 	out.R = left.R / right.R;
 	out.G = left.G / right.G;
 	out.B = left.B / right.B;
 	return out;
 }
-inline bool isZero(Pixel p) {
+Pixel CLI_Global::operator*(Pixel left, float scale) {
+	Pixel out;
+	out.R = left.R * scale;
+	out.G = left.G * scale;
+	out.B = left.B * scale;
+	return out;
+}
+Pixel CLI_Global::operator/(Pixel left, float scale) {
+	Pixel out;
+	out.R = left.R / scale;
+	out.G = left.G / scale;
+	out.B = left.B / scale;
+	return out;
+}
+// Clamps floats to range 0 to 1
+GLfloat CLI_Global::clamp(GLfloat in) {
+	in = (in < 0) ? 0 : in;
+	in = (in > 1) ? 1 : in;
+	return in;
+}
+void CLI_Global::clamp(Pixel& p) {
+	p.R = clamp(p.R);
+	p.G = clamp(p.G);
+	p.B = clamp(p.B);
+}
+bool CLI_Global::isZero(Pixel p) {
 	return (p.R == 0 && p.G == 0 && p.B == 0);
 }
 
