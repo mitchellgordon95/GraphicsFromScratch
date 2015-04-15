@@ -1,11 +1,37 @@
 #include "cli_raytrace.h"
 #include "cli_global.h"
+#include <cmath>
 
 using namespace CLI_Global;
 
 namespace CLI_Raytrace {
 
-	Pixel shade(fvec point, fvec dir) {
+	// The color of the background
+	Pixel background = {0, 0, 0};
+
+	// Where we're viewing from
+	fvec eye;
+
+	// What direction we're looking at
+	fvec gaze_dir;
+
+	// Which way is up
+	fvec up_dir;
+
+	// Distance to the screen
+	fvec screen_dist;
+
+	// Bottom left and top right corners of the screen.
+	// These are
+	fvec screen_bot_left;
+	fvec screen_bot_right;
+
+	std::vector<Surface *> surfaces;
+
+	std::vector<InfinityLight> lights;
+
+
+	Pixel shade(fvec origin, fvec dir) {
 		static int recurse_depth = 0;
 
 		if (recurse_depth > 3)
@@ -15,7 +41,7 @@ namespace CLI_Raytrace {
 		HitRecord closest;
 		closest.hit = false;
 		for (size_t i = 0; i < surfaces.size(); ++i) {
-			HitRecord next = surfaces[i]->intersects(point, dir);
+			HitRecord next = surfaces[i]->intersects(origin, dir);
 			if (next.hit && (!closest.hit || next.t < closest.t))
 				closest = next;
 		}
@@ -67,14 +93,14 @@ namespace CLI_Raytrace {
 
 	}
 
-	HitRecord Box::intersects(fvec point, fvec dir) {
+	HitRecord Box::intersects(fvec origin, fvec dir) {
 		HitRecord record;
 		record.hit = false;
 		fvec normal = zeros<fvec>(3);
 		float tmin, tmax, txmin, txmax, tymin, tymax, tzmin, tzmax;
 
-		txmin = (llb(0) - point(0)) / dir(0);
-		txmax = (urt(0) - point(0)) / dir(0);
+		txmin = (llb(0) - origin(0)) / dir(0);
+		txmax = (urt(0) - origin(0)) / dir(0);
 
 		normal(0) = -1;
 
@@ -86,8 +112,8 @@ namespace CLI_Raytrace {
 		tmin = txmin;
 		tmax = txmax;
 
-		tymin = (llb(1) - point(1)) / dir(1);
-		tymax = (urt(1) - point(1)) / dir(1);
+		tymin = (llb(1) - origin(1)) / dir(1);
+		tymax = (urt(1) - origin(1)) / dir(1);
 
 		if (dir(1) < 0)
 			std::swap(tymin, tymax);
@@ -112,8 +138,8 @@ namespace CLI_Raytrace {
 		if (tymax < tmax)
 			tmax = tymax;
 
-		tzmin = (llb(2) - point(2)) / dir(2);
-		tzmax = (urt(2) - point(2)) / dir(2);
+		tzmin = (llb(2) - origin(2)) / dir(2);
+		tzmax = (urt(2) - origin(2)) / dir(2);
 
 		if (dir(2) < 0)
 			std::swap(tzmin, tzmax);
@@ -149,29 +175,26 @@ namespace CLI_Raytrace {
 
 	}
 
+	Sphere::Sphere(fvec cent, float rad, Pixel amb, Pixel ref, Pixel spec):
+			Surface(amb, ref, spec), center(cent), radius(rad) {}
 
-	// The color of the background
-	Pixel background = {0, 0, 0};
+	HitRecord Sphere::intersects(fvec origin, fvec dir) {
+		HitRecord record;
+		record.hit = false;
 
-	// Where we're viewing from
-	fvec eye;
+		fvec e_c = origin - center;
+		float discrim = pow(dot(dir, e_c), 2) - dot(dir, dir) * (dot(e_c, e_c) - pow(radius, 2));
 
-	// What direction we're looking at
-	fvec gaze_dir;
+		// No hit.
+		if (discrim < 0)
+			return record;
 
-	// Which way is up
-	fvec up_dir;
+		record.surface = this;
+		record.t = (dot(-dir, e_c) - sqrt(discrim)) / dot(dir, dir);
 
-	// Distance to the screen
-	fvec screen_dist;
+		fvec intersection = origin + record.t * dir;
+		record.normal = (intersection - center) / radius;
 
-	// Bottom left and top right corners of the screen.
-	// These are
-	fvec screen_bot_left;
-	fvec screen_bot_right;
-
-	std::vector<Surface *> surfaces;
-
-	std::vector<InfinityLight> lights;
-
+		return record;
+	}
 }

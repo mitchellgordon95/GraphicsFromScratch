@@ -10,7 +10,7 @@ using namespace CLI_Global;
 namespace CLI_Raytrace {
 
 	// Given a ray in 3D space, calculate the appropriate color given the environment settings.
-	Pixel shade(fvec point, fvec dir);
+	Pixel shade(fvec origin, fvec dir);
 
 	// The color of the background
 	extern Pixel background;
