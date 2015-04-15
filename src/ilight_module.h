@@ -11,7 +11,7 @@ private:
 public:
     CLI_Ilight(): CLI_Module("ilight", 6) {};
     ~CLI_Ilight();
-    virtual const char * getHelp() { return "ilight lr,lg,lb,dx,dy,dz"; }
+    virtual const char * getHelp() { return "ilight cr,cg,cb,dx,dy,dz: adds a light at infinity. c is color, d is direction."; }
 };
 
 #endif

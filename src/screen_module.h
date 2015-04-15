@@ -11,7 +11,7 @@ private:
 public:
     CLI_Screen(): CLI_Module("screen", 2) {};
     ~CLI_Screen();
-    virtual const char * getHelp() { return "Set the screen dimension"; }
+    virtual const char * getHelp() { return "screen x, y: set the screen dimension"; }
 };
 
 #endif

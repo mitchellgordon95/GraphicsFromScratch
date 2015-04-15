@@ -11,7 +11,7 @@ private:
 public:
     CLI_Camera(): CLI_Module("camera", 14) {};
     ~CLI_Camera();
-    virtual const char * getHelp() { return "camera "; }
+    virtual const char * getHelp() { return "camera ex,ey,ez,gx,gy,gz,ux,uy,uz,s,au,av,bu,bv: position the camera and the screen. e is the eye point, g is the gaze direction, u is up, s is the distance to the screen, and a/b are the dimensions of the screen."; }
 };
 
 #endif
