@@ -14,6 +14,25 @@ bool CLI_Global::diagnostics = false;
 // Allocate space in the object file for static members.
 Image CLI_Global::displayImage;
 
+
+inline Pixel operator*(Pixel left, Pixel right) {
+	Pixel out;
+	out.R = left.R * right.R;
+	out.G = left.G * right.G;
+	out.B = left.B * right.B;
+	return out;
+}
+inline Pixel operator/(Pixel left, Pixel right) {
+	Pixel out;
+	out.R = left.R / right.R;
+	out.G = left.G / right.G;
+	out.B = left.B / right.B;
+	return out;
+}
+inline bool isZero(Pixel p) {
+	return (p.R == 0 && p.G == 0 && p.B == 0);
+}
+
 // Resizes the image on the screen, clearing the image.
 void CLI_Global::resizeImage(int width, int height) {
 
