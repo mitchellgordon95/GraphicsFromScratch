@@ -197,4 +197,60 @@ namespace CLI_Raytrace {
 
 		return record;
 	}
+
+	Triangle::Triangle(fvec first, fvec second, fvec third, Pixel amb, Pixel ref, Pixel spec):
+			Surface(amb, ref, spec), a(first), b(second), c(third) {}
+
+	HitRecord Triangle::intersects(fvec point, fvec dir) {
+		HitRecord record;
+		record.hit = false;
+
+		// TODO - This can be optimized.
+
+		// Using Cramer's rule to solve the system of equations that represent
+		// the intersection of the ray with the plane the triangle is on.
+
+		fmat A(3,3);
+
+		A.col(0) = a - b;
+		A.col(1) = a - c;
+		A.col(2) = dir;
+
+		float det_A = det(A);
+
+		fvec a_p = a - point;
+
+		fmat B = A;
+		B.col(0) = a_p;
+
+		float beta = det(B) / det_A;
+
+		if (beta < 0 || beta > 1)
+			// No hit.
+			return record;
+
+		B = A;
+		B.col(1) = a_p;
+
+		float gamma = det(B) / det_A;
+
+		if (gamma < 0 || gamma > 1 - beta )
+			// No hit.
+			return record;
+
+		B = A;
+		B.col(2) = a_p;
+
+		record.t = det(B) / det_A;
+		record.normal = norm(cross(a-c, a-b), 2);
+
+		// The triangle has two outward facing normals
+		if (dot(record.normal, dir) < 0)
+			record.normal = -record.normal;
+
+		record.surface = this;
+
+		return record;
+	}
+
 }
