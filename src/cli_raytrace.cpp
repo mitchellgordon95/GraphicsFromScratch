@@ -9,8 +9,11 @@ namespace CLI_Raytrace {
 	// The color of the background
 	Pixel background = {0, 0, 0};
 
+	// Should the raytracer use an orthographic perspective or camera perspective
+	bool orthographic = true;
+
 	// Where we're viewing from
-	fvec eye;
+	fvec viewpoint;
 
 	// What direction we're looking at
 	fvec gaze_dir;
@@ -24,7 +27,7 @@ namespace CLI_Raytrace {
 	// Bottom left and top right corners of the screen.
 	// These are
 	fvec screen_bot_left;
-	fvec screen_bot_right;
+	fvec screen_top_right;
 
 	std::vector<Surface *> surfaces;
 
@@ -76,7 +79,7 @@ namespace CLI_Raytrace {
 			reflection = norm(reflection, 2);
 
 			// Calculate the specular reflection from the point of contact.
-			total = total + (spec * shade(eye + closest.t * dir, reflection));
+			total = total + (spec * shade(origin + closest.t * dir, reflection));
 		}
 
 		clamp(total);
@@ -189,6 +192,7 @@ namespace CLI_Raytrace {
 		if (discrim < 0)
 			return record;
 
+		record.hit = true;
 		record.surface = this;
 		record.t = (dot(-dir, e_c) - sqrt(discrim)) / dot(dir, dir);
 
@@ -242,13 +246,14 @@ namespace CLI_Raytrace {
 		B.col(2) = a_p;
 
 		record.t = det(B) / det_A;
-		record.normal = norm(cross(a-c, a-b), 2);
-
+		record.normal = cross(a-c, a-b);
+		record.normal = record.normal / norm(record.normal, 2);
 		// The triangle has two outward facing normals
 		if (dot(record.normal, dir) < 0)
 			record.normal = -record.normal;
 
 		record.surface = this;
+		record.hit = true;
 
 		return record;
 	}

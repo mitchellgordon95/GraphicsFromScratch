@@ -15,4 +15,5 @@ void CLI_Clear::execute(std::vector<char *> &params)
 
 	surfaces.clear();
 	clearImage();
+	glutPostRedisplay();
 }

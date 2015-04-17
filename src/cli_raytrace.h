@@ -15,8 +15,11 @@ namespace CLI_Raytrace {
 	// The color of the background
 	extern Pixel background;
 
+	// Should the raytracer use an orthographic perspective or camera perspective
+	extern bool orthographic;
+
 	// Where we're viewing from
-	extern fvec eye;
+	extern fvec viewpoint;
 
 	// What direction we're looking at
 	extern fvec gaze_dir;
@@ -28,9 +31,9 @@ namespace CLI_Raytrace {
 	extern fvec screen_dist;
 
 	// Bottom left and top right corners of the screen.
-	// These are
+	// These are in camera space, where the gaze direction is -w, up is u;
 	extern fvec screen_bot_left;
-	extern fvec screen_bot_right;
+	extern fvec screen_top_right;
 
 	// Information about an intersection between a surface and a ray.
 	struct HitRecord;

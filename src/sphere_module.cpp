@@ -13,8 +13,8 @@ void CLI_Sphere::execute(std::vector<char *> &params)
 
 	fvec center(3);
 	center(0) = parseNumericalArg(params[1]);
-	center(0) = parseNumericalArg(params[2]);
-	center(0) = parseNumericalArg(params[3]);
+	center(1) = parseNumericalArg(params[2]);
+	center(2) = parseNumericalArg(params[3]);
 
 	Pixel amb;
 	amb.R = parseNumericalArg(params[4]);

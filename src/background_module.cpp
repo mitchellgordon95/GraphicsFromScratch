@@ -13,5 +13,5 @@ void CLI_Background::execute(std::vector<char *> &params)
 
 	CLI_Raytrace::background = {r, g, b};
 
-	std::cout << "Set background color to R=" << r << ",G=" << g << "B=" << b << std::endl;
+	std::cout << "Set background color to R=" << r << ",G=" << g << ",B=" << b << std::endl;
 }
