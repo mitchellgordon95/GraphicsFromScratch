@@ -266,10 +266,11 @@ namespace CLI_Raytrace {
 		B.col(2) = a_p;
 
 		record.t = det(B) / det_A;
-		record.normal = cross(a-c, a-b);
+		record.normal = cross(c-a, b-a);
 		record.normal = record.normal / norm(record.normal, 2);
+
 		// The triangle has two outward facing normals
-		if (dot(record.normal, dir) < 0)
+		if (dot(record.normal, dir) > 0)
 			record.normal = -record.normal;
 
 		record.surface = this;
