@@ -36,55 +36,62 @@ namespace CLI_Raytrace {
 
 	Pixel shade(fvec origin, fvec dir) {
 		static int recurse_depth = 0;
+		++recurse_depth;
 
-		if (recurse_depth > 3)
+		Pixel out;
+
+		if (recurse_depth > 3) {
+			--recurse_depth;
 			return {0, 0, 0};
+		}
 
 		// Find the closest object that the ray intersects
 		HitRecord closest;
 		closest.hit = false;
 		for (size_t i = 0; i < surfaces.size(); ++i) {
 			HitRecord next = surfaces[i]->intersects(origin, dir);
-			if (next.hit && (!closest.hit || next.t < closest.t))
+			if (next.hit && next.t > 0 && (!closest.hit || next.t < closest.t))
 				closest = next;
 		}
 
-		if (!closest.hit)
-			return background;
+		if (!closest.hit) {
+			out = background;
+		}
+		else {
+			out = closest.surface->getAmbientColor();
 
-		Pixel total = closest.surface->getAmbientColor();
+			// Calculate the reflective lighting component
+			// TODO - Add phong lighting
+			Pixel reflect = closest.surface->getReflectiveColor();
+			if (!isZero(reflect)) {
+				for (size_t i = 0; i < lights.size(); ++i) {
+					// Since the lights are all at infinity, to get the ray from the
+					// point of intersection to the light, just reverse the direction
+					// of the light.
+					fvec l = -lights[i].direction;
 
-		// Calculate the reflective lighting component
-		// TODO - Add phong lighting
-		Pixel reflect = closest.surface->getReflectiveColor();
-		if (!isZero(reflect)) {
-			for (size_t i = 0; i < lights.size(); ++i) {
-				// Since the lights are all at infinity, to get the ray from the
-				// point of intersection to the light, just reverse the direction
-				// of the light.
-				fvec l = -lights[i].direction;
+					// The cosine of the angle between the light and the normal
+					float cos_theta = dot(l, closest.normal);
+					cos_theta = (cos_theta < 0) ? 0 : cos_theta;
 
-				// The cosine of the angle between the light and the normal
-				float cos_theta = dot(l, closest.normal);
-				cos_theta = (cos_theta < 0) ? 0 : cos_theta;
+					out = out + (reflect * lights[i].color * cos_theta);
+				}
+			}
 
-				total = total + (reflect * lights[i].color * cos_theta);
+			// Calculate the specular component
+			Pixel spec = closest.surface->getSpecularColor();
+			if (!isZero(spec)) {
+				fvec reflection = dir - 2 * dot (dir, closest.normal) * closest.normal;
+				reflection = reflection / norm(reflection, 2);
+
+				// Calculate the specular reflection from the point of contact.
+				out = out + (spec * shade(origin + closest.t * dir, reflection));
 			}
 		}
+		clamp(out);
 
-		// Calculate the specular component
-		Pixel spec = closest.surface->getSpecularColor();
-		if (!isZero(spec)) {
-			fvec reflection = dir - 2 * (dot (dir, closest.normal)) * closest.normal;
-			reflection = norm(reflection, 2);
-
-			// Calculate the specular reflection from the point of contact.
-			total = total + (spec * shade(origin + closest.t * dir, reflection));
-		}
-
-		clamp(total);
-
-		return total;
+		--recurse_depth;
+		return out;
 	}
 
 

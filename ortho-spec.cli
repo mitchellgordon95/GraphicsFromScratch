@@ -1,0 +1,10 @@
+clear
+screen 512 512
+orthocamera
+background 0 0 0 
+#Light from top left back
+ilight 1 1 1, 1 -1 -1
+triangle 30 156 -200, 140 156 -200, 100 356 -200, 0 0 0, 0 0 1, .5 .5 .5
+sphere 100, 256 256 -200, 0 0 0, 1 0 0, .5 .5 .5
+box  400 156 -100, 500 356 -300, 0 0 0, 0 1 0, 1 1 1 
+trace
