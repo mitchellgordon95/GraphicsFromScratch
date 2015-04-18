@@ -1,12 +1,10 @@
 clear
-#screen 1024 1024
+screen 512 512
 orthocamera
 background .5 .5 .5
-#White light straight down
-ilight 1 1 1 0 -1 0
-#white light from bottom left
-ilight 1 1 1 0 0 -1 
-sphere 100 128 128 -25 0 0 0 1 0 0
-triangle 0 0 -18 20 20 -18 20 0 -28 0 0 0 0 0 1 
-box 128 0 -10 240 80 -5 0 0 0 0 1 0
+#White light from top left 
+ilight .8 .8 .8 1 -1 -1
+triangle 30 156 -200, 140 156 -200, 100 356 -200, 0 0 0, 0 0 1 
+sphere 100, 256 256 -200, 0 0 0, 1 0 0
+box  400 156 -100, 500 356 -300, 0 0 0, 0 1 0
 trace

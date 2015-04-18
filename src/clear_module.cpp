@@ -14,6 +14,7 @@ void CLI_Clear::execute(std::vector<char *> &params)
 	}
 
 	surfaces.clear();
+	lights.clear();
 	clearImage();
 	glutPostRedisplay();
 }

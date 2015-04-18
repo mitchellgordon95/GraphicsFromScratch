@@ -41,6 +41,6 @@ void CLI_Box::execute(std::vector<char *> &params)
 
 	surfaces.push_back(new Box(llb, urt, amb, reflec, spec));
 
-	std::cout << "Created a box with the lower-left-back corner at " << std::endl << llb;
-	std::cout << " and the upper-right-top corner at " << std::endl << urt << ".";
+	std::cout << "Created a box with one corner at " << std::endl << llb;
+	std::cout << " and the other corner at " << std::endl << urt << ".";
 }

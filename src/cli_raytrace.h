@@ -78,7 +78,7 @@ namespace CLI_Raytrace {
 	private:
 		fvec llb, urt;
 	public:
-		Box(fvec lower_left_back, fvec upper_right_top, Pixel amb, Pixel ref, Pixel spec);
+		Box(fvec first_corner, fvec second_corner, Pixel amb, Pixel ref, Pixel spec);
 		HitRecord intersects(fvec eye, fvec dir);
 	};
 

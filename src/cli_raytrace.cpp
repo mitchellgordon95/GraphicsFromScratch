@@ -91,9 +91,15 @@ namespace CLI_Raytrace {
 	Box::Box(fvec lower_left_back, fvec upper_right_top, Pixel amb, Pixel ref, Pixel spec): Surface(amb, ref, spec),
 			llb(lower_left_back), urt(upper_right_top){
 
-		if (llb(0) > urt(0) || llb(1) > urt(1) || llb(2) > urt(2))
-			throw std::runtime_error("The lower-left-bottom corner must be less than the upper-right-top corner");
-
+		// Make sure that the lower left corner is actually the lower left corner.
+		float tmp;
+		for (int i = 0; i < 3 ; ++i) {
+			if (urt(i) < llb(i)) {
+				tmp = urt(i);
+				urt(i) = llb(i);
+				llb(i) = tmp;
+			}
+		}
 	}
 
 	HitRecord Box::intersects(fvec origin, fvec dir) {
@@ -102,12 +108,19 @@ namespace CLI_Raytrace {
 		fvec normal = zeros<fvec>(3);
 		float tmin, tmax, txmin, txmax, tymin, tymax, tzmin, tzmax;
 
+		// Note: This code works because we assume that divide-by-0 results in either
+		// infinity or negative infinity, as defined by the Annex F standard.
+
 		txmin = (llb(0) - origin(0)) / dir(0);
 		txmax = (urt(0) - origin(0)) / dir(0);
 
 		normal(0) = -1;
 
-		if (dir(0) < 0) {
+		// No hit.
+		if (txmin == txmax)
+			return record;
+
+		if (txmax < txmin) {
 			std::swap(txmin, txmax);
 			normal(0) = 1;
 		}
@@ -118,7 +131,7 @@ namespace CLI_Raytrace {
 		tymin = (llb(1) - origin(1)) / dir(1);
 		tymax = (urt(1) - origin(1)) / dir(1);
 
-		if (dir(1) < 0)
+		if (tymax < tymin)
 			std::swap(tymin, tymax);
 
 		// No intersection.
@@ -132,10 +145,10 @@ namespace CLI_Raytrace {
 
 			// If we bounced off the upper y plane
 			if (dir(1) < 0) {
-				normal(1) = -1;
+				normal(1) = 1;
 			}
 			else {
-				normal(1) = 1;
+				normal(1) = -1;
 			}
 		}
 		if (tymax < tmax)
@@ -144,7 +157,7 @@ namespace CLI_Raytrace {
 		tzmin = (llb(2) - origin(2)) / dir(2);
 		tzmax = (urt(2) - origin(2)) / dir(2);
 
-		if (dir(2) < 0)
+		if (tzmax < tzmin)
 			std::swap(tzmin, tzmax);
 
 		// No intersection.
@@ -159,10 +172,10 @@ namespace CLI_Raytrace {
 
 			// If we bounced off the upper z plane
 			if (dir(2) < 0) {
-				normal(2) = -1;
+				normal(2) = 1;
 			}
 			else {
-				normal(2) = 1;
+				normal(2) = -1;
 			}
 		}
 		if (tzmax < tmax)
