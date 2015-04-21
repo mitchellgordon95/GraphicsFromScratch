@@ -1,3 +1,0 @@
-tiffstat ../images/eeyore.tif
-tiffread ../images/eeyore.tif
-tiffwrite eeyore_partial.tif 0 0 100 100
