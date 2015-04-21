@@ -22,13 +22,13 @@ namespace CLI_Raytrace {
 	extern fvec viewpoint;
 
 	// What direction we're looking at
-	extern fvec gaze_dir;
+	extern frowvec gaze_dir;
 
 	// Which way is up
-	extern fvec up_dir;
+	extern frowvec up_dir;
 
 	// Distance to the screen
-	extern fvec screen_dist;
+	extern float screen_dist;
 
 	// Bottom left and top right corners of the screen.
 	// These are in camera space, where the gaze direction is -w, up is u;

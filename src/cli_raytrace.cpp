@@ -13,21 +13,21 @@ namespace CLI_Raytrace {
 	bool orthographic = true;
 
 	// Where we're viewing from
-	fvec viewpoint;
+	fvec viewpoint(3);
 
 	// What direction we're looking at
-	fvec gaze_dir;
+	frowvec gaze_dir(3);
 
 	// Which way is up
-	fvec up_dir;
+	frowvec up_dir(3);
 
 	// Distance to the screen
-	fvec screen_dist;
+	float screen_dist;
 
 	// Bottom left and top right corners of the screen.
 	// These are
-	fvec screen_bot_left;
-	fvec screen_top_right;
+	fvec screen_bot_left(2);
+	fvec screen_top_right(2);
 
 	std::vector<Surface *> surfaces;
 
