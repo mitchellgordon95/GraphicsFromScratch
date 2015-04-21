@@ -22,6 +22,7 @@
 #include "printperspect_module.h"
 #include "push_module.h"
 #include "read_module.h"
+#include "recursiondepth_module.h"
 #include "reset_module.h"
 #include "resize_module.h"
 #include "rotate_module.h"
@@ -66,6 +67,7 @@ Dispatcher::Dispatcher() : CLI_Module("help", 0)
     _modules.push_back(new CLI_Printperspect());
     _modules.push_back(new CLI_Push());
     _modules.push_back(new CLI_Read());
+    _modules.push_back(new CLI_Recursiondepth());
     _modules.push_back(new CLI_Reset());
     _modules.push_back(new CLI_Resize());
     _modules.push_back(new CLI_Rotate());

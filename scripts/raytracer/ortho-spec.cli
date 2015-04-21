@@ -1,5 +1,4 @@
 clear
-screen 512 512
 orthocamera
 background 0 0 0 
 #Light from top left back

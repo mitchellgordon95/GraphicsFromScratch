@@ -1,5 +1,4 @@
 clear
-screen 512 512
 orthocamera
 triangle 30 156 -200, 140 156 -200, 100 356 -200, 0 0 1, 0 0 0 
 sphere 100, 256 256 -200, 1 0 0, 0 0 0

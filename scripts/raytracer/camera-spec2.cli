@@ -1,5 +1,4 @@
 clear
-screen 512 512
 camera 0 512 0, .7 -1.2 -1, 0 1 0, 200, -256 -256, 256 256
 background 0 0 0 
 #Light from front top left

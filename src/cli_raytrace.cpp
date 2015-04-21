@@ -29,6 +29,9 @@ namespace CLI_Raytrace {
 	fvec screen_bot_left(2);
 	fvec screen_top_right(2);
 
+	// How many times should we recursively calculate specular color?
+	int max_recursion_depth = 4;
+
 	std::vector<Surface *> surfaces;
 
 	std::vector<InfinityLight> lights;
@@ -40,9 +43,9 @@ namespace CLI_Raytrace {
 
 		Pixel out;
 
-		if (recurse_depth > 3) {
+		if (recurse_depth > max_recursion_depth) {
 			--recurse_depth;
-			return {0, 0, 0};
+			return {0,0,0};
 		}
 
 		// Find the closest object that the ray intersects

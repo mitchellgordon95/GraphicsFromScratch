@@ -14,4 +14,6 @@ void CLI_Screen::execute(std::vector<char *> &params)
 	CLI_Global::resizeImage(x, y);
 
 	std::cout << "Resized image to " << x << "x" << y << " pixels." << std::endl;
+
+	glutPostRedisplay();
 }

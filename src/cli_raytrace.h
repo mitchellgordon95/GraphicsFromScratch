@@ -35,6 +35,9 @@ namespace CLI_Raytrace {
 	extern fvec screen_bot_left;
 	extern fvec screen_top_right;
 
+	// How many times should we recursively calculate specular color?
+	extern int max_recursion_depth;
+
 	// Information about an intersection between a surface and a ray.
 	struct HitRecord;
 
