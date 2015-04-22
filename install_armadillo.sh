@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "You might need to run apt-get update before installing these packages"
 [ -z "`dpkg -l | grep libarmadillo-dev`" ] && sudo apt-get install libarmadillo-dev
 [ -z "`dpkg -l | grep libarmadillo3`" ] && sudo apt-get install libarmadillo3
 [ -z "`dpkg -l | grep libblas3`" ] && sudo apt-get install libblas3
