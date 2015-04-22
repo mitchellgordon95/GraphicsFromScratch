@@ -20,7 +20,11 @@ OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 obj/%.o: src/%.cpp
 	g++ $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-all: main
+all: armadillo main
+
+armadillo: 
+	./install_armadillo.sh
+.PHONY: armadillo
 
 main: $(OBJ_FILES)
 	$(LINK) $(OBJ_FILES) $(LDADD) $(LIBS)
